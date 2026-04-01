@@ -1,0 +1,42 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="TableTop &amp; Coffee POS" Height="768" Width="1024" 
+        WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#EFEBE4">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#1A1514" Padding="10">
+            <StackPanel>
+                <TextBlock Text="BOARD GAME" FontSize="24" FontWeight="Bold" Foreground="#EFEBE4" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+                <TextBlock Text="CAFE POS" FontSize="16" FontWeight="SemiBold" Foreground="#8C5A35" HorizontalAlignment="Center" Margin="0,0,0,40"/>
+                <Button x:Name="btnPOS" Content="🎲 Punto de Venta" Click="btnPOS_Click" Height="50" Background="#4A3525" Foreground="#EFEBE4" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/>
+
+                <Button Content="📦 Inventario" Height="50" Background="Transparent" Foreground="#D4C4B7" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/>
+
+                <Button Content="📊 Reportes" Height="50" Background="Transparent" Foreground="#D4C4B7" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/>
+
+                <Button Content="⚙️ Configuración" Height="50" Background="Transparent" Foreground="#D4C4B7" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1" Background="#EFEBE4" Margin="10" CornerRadius="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" BorderBrush="#D4C4B7" BorderThickness="0,0,0,2">
+                    <TextBlock Text="Punto de Venta - Mesas Activas" FontSize="20" FontWeight="Bold" Foreground="#1A1514" VerticalAlignment="Center" Margin="20,0"/>
+                </Border>
+
+                <ContentControl x:Name="AreaPrincipal" Grid.Row="1" Margin="20"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
