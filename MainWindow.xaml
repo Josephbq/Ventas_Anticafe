@@ -12,15 +12,15 @@
 
         <Border Grid.Column="0" Background="#1A1514" Padding="10">
             <StackPanel>
-                <TextBlock Text="BOARD GAME" FontSize="24" FontWeight="Bold" Foreground="#EFEBE4" HorizontalAlignment="Center" Margin="0,20,0,0"/>
-                <TextBlock Text="CAFE POS" FontSize="16" FontWeight="SemiBold" Foreground="#8C5A35" HorizontalAlignment="Center" Margin="0,0,0,40"/>
-                <Button x:Name="btnPOS" Content="🎲 Punto de Venta" Click="btnPOS_Click" Height="50" Background="#4A3525" Foreground="#EFEBE4" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/>
+                <TextBlock Text="COCOCAFE" FontSize="24" FontWeight="Bold" Foreground="#EFEBE4" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+                <TextBlock Text="JOGOS" FontSize="16" FontWeight="SemiBold" Foreground="#8C5A35" HorizontalAlignment="Center" Margin="0,0,0,40"/>
+                <Button x:Name="btnPOS" Content="🎲 Punto de Venta" Click="btnPOS_Click" Height="50" Background="Transparent" Foreground="#EFEBE4" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/>
 
-                <Button Content="📦 Inventario" Height="50" Background="Transparent" Foreground="#D4C4B7" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/>
+                <Button x:Name="btnInventario" Content="📦 Inventario" Click="btnInventario_Click" Height="50" Background="Transparent" Foreground="#D4C4B7" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/>
 
-                <Button Content="📊 Reportes" Height="50" Background="Transparent" Foreground="#D4C4B7" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/>
+                <Button x:Name="btnReportes" Content="📊 Reportes" Click="btnReportes_Click" Height="50" Background="Transparent" Foreground="#D4C4B7" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/>
 
-                <Button Content="⚙️ Configuración" Height="50" Background="Transparent" Foreground="#D4C4B7" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/>
+                <!--<Button Content="⚙️ Configuración" Height="50" Background="Transparent" Foreground="#D4C4B7" BorderThickness="0" Cursor="Hand" Margin="0,5" FontSize="16" HorizontalContentAlignment="Left" Padding="20,0,0,0"/> -->
             </StackPanel>
         </Border>
 

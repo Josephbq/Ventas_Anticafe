@@ -11,15 +11,30 @@
             <ColumnDefinition Width="350"/>
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="0" Background="#F8F5F0" BorderBrush="#D4C4B7" BorderThickness="1" Margin="0,0,10,0" CornerRadius="8" Padding="15">
-            <StackPanel>
-                <TextBlock Text="Selecciona una Mesa" FontSize="18" FontWeight="SemiBold" Foreground="#1A1514" Margin="0,0,0,15"/>
+        <Grid Grid.Column="0" Margin="0,0,10,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                <WrapPanel x:Name="PanelMesas" Orientation="Horizontal">
-    
-                </WrapPanel>
-            </StackPanel>
-        </Border>
+            <Border Grid.Row="0" Background="#F8F5F0" BorderBrush="#D4C4B7" BorderThickness="1" CornerRadius="8" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Selecciona una Mesa" FontSize="18" FontWeight="SemiBold" Foreground="#1A1514" Margin="0,0,0,10"/>
+                    <WrapPanel x:Name="PanelMesas" Orientation="Horizontal">
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="1" Background="#F8F5F0" BorderBrush="#D4C4B7" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,15,0,0">
+                <StackPanel>
+                    <TextBlock Text="Menú Rápido (Juegos y Cafetería)" FontSize="18" FontWeight="SemiBold" Foreground="#1A1514" Margin="0,0,0,10"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="300">
+                        <WrapPanel x:Name="PanelProductos" Orientation="Horizontal">
+                        </WrapPanel>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+        </Grid>
 
         <Border Grid.Column="1" Background="#FFFFFF" BorderBrush="#D4C4B7" BorderThickness="1" CornerRadius="8" Padding="15">
             <Grid>
@@ -27,18 +42,19 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Mesa Seleccionada: Ninguna" FontSize="16" FontWeight="Bold" Foreground="#1A1514" Margin="0,0,0,10"/>
+                <TextBlock x:Name="lblMesaSeleccionada" Grid.Row="0" Text="Mesa Seleccionada: Ninguna" FontSize="16" FontWeight="Bold" Foreground="#1A1514" Margin="0,0,0,10"/>
 
-                <ListBox Grid.Row="1" Background="#F8F5F0" BorderBrush="#D4C4B7" BorderThickness="1" Margin="0,10" Foreground="#1A1514" FontSize="14">
-                    <ListBoxItem Content="1x Catan (Juego) - $5.00"/>
-                    <ListBoxItem Content="2x Frappe Oreo - $7.00"/>
-                </ListBox>
+                <ListBox x:Name="ListaTicket" Grid.Row="1" Background="#F8F5F0" BorderBrush="#D4C4B7" BorderThickness="1" Margin="0,10" Foreground="#1A1514" FontSize="14"/>
 
-                <StackPanel Grid.Row="2" Margin="0,10,0,0">
-                    <TextBlock Text="Total: $12.00" FontSize="22" FontWeight="Bold" Foreground="#1A1514" HorizontalAlignment="Right" Margin="0,0,0,15"/>
-                    <Button Content="💵 COBRAR Y ABRIR CAJA" Height="50" Background="#1A1514" Foreground="#EFEBE4" FontSize="16" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>
+                <Button x:Name="btnQuitarProducto" Grid.Row="2" Content="🗑️ Quitar Seleccionado" Height="35" Background="#FF5252" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="0,0,0,15" Click="BtnQuitarProducto_Click"/>
+
+                <StackPanel Grid.Row="3" Margin="0,10,0,0">
+                    <TextBlock x:Name="lblTotal" Text="Total: $0.00" FontSize="22" FontWeight="Bold" Foreground="#1A1514" HorizontalAlignment="Right" Margin="0,0,0,15"/>
+
+                    <Button x:Name="btnCobrar" Content="💵 COBRAR Y ABRIR CAJA" Height="50" Background="#1A1514" Foreground="#EFEBE4" FontSize="16" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="BtnCobrar_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
