@@ -1,60 +1,122 @@
-﻿<UserControl x:Class="WpfApp1.Views.POSView"
+<UserControl x:Class="WpfApp1.Views.POSView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d"
-             Background="Transparent" d:DesignHeight="600" d:DesignWidth="800">
+             Background="Transparent" d:DesignHeight="700" d:DesignWidth="1000">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="380"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" Margin="0,0,10,0">
+        <!-- ═══════════════════════════════════════ -->
+        <!-- PANEL IZQUIERDO: MESAS + PRODUCTOS      -->
+        <!-- ═══════════════════════════════════════ -->
+        <Grid Grid.Column="0" Margin="0,0,15,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Background="#F8F5F0" BorderBrush="#D4C4B7" BorderThickness="1" CornerRadius="8" Padding="15">
+            <!-- Mesas -->
+            <Border Grid.Row="0" Style="{StaticResource Card}" Margin="0,0,0,15">
                 <StackPanel>
-                    <TextBlock Text="Selecciona una Mesa" FontSize="18" FontWeight="SemiBold" Foreground="#1A1514" Margin="0,0,0,10"/>
-                    <WrapPanel x:Name="PanelMesas" Orientation="Horizontal">
-                    </WrapPanel>
+                    <TextBlock Text="🪑 Selecciona una Mesa" FontSize="16" FontWeight="Bold" 
+                               Foreground="#1A1514" Margin="0,0,0,12"/>
+                    <WrapPanel x:Name="PanelMesas" Orientation="Horizontal"/>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Row="1" Background="#F8F5F0" BorderBrush="#D4C4B7" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,15,0,0">
-                <StackPanel>
-                    <TextBlock Text="Menú Rápido (Juegos y Cafetería)" FontSize="18" FontWeight="SemiBold" Foreground="#1A1514" Margin="0,0,0,10"/>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="300">
-                        <WrapPanel x:Name="PanelProductos" Orientation="Horizontal">
-                        </WrapPanel>
+            <!-- Productos con Tabs -->
+            <Border Grid.Row="1" Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="📋 Menú de Productos" FontSize="16" FontWeight="Bold" 
+                               Foreground="#1A1514" Margin="0,0,0,12"/>
+
+                    <!-- Tabs de categoría -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+                        <Button x:Name="btnTabTodos" Content="Todos" Style="{StaticResource ToggleBtnActive}" 
+                                Click="BtnTab_Click" Tag="TODOS"/>
+                        <Button x:Name="btnTabCafe" Content="☕ Cafetería" Style="{StaticResource ToggleBtn}" 
+                                Click="BtnTab_Click" Tag="CAFETERIA"/>
+                        <Button x:Name="btnTabJuegos" Content="🎲 Juegos" Style="{StaticResource ToggleBtn}" 
+                                Click="BtnTab_Click" Tag="JUEGOS"/>
+                    </StackPanel>
+
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                        <WrapPanel x:Name="PanelProductos" Orientation="Horizontal"/>
                     </ScrollViewer>
-                </StackPanel>
+                </Grid>
             </Border>
         </Grid>
 
-        <Border Grid.Column="1" Background="#FFFFFF" BorderBrush="#D4C4B7" BorderThickness="1" CornerRadius="8" Padding="15">
+        <!-- ═══════════════════════════════════════ -->
+        <!-- PANEL DERECHO: TICKET / CUENTA           -->
+        <!-- ═══════════════════════════════════════ -->
+        <Border Grid.Column="1" Style="{StaticResource Card}">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock x:Name="lblMesaSeleccionada" Grid.Row="0" Text="Mesa Seleccionada: Ninguna" FontSize="16" FontWeight="Bold" Foreground="#1A1514" Margin="0,0,0,10"/>
+                <!-- Mesa seleccionada -->
+                <Border Grid.Row="0" Background="#2D201A" CornerRadius="8" Padding="12,10" Margin="0,0,0,10">
+                    <TextBlock x:Name="lblMesaSeleccionada" Text="Selecciona una mesa" FontSize="15" 
+                               FontWeight="Bold" Foreground="#EFEBE4"/>
+                </Border>
 
-                <ListBox x:Name="ListaTicket" Grid.Row="1" Background="#F8F5F0" BorderBrush="#D4C4B7" BorderThickness="1" Margin="0,10" Foreground="#1A1514" FontSize="14"/>
+                <!-- Encabezado ticket -->
+                <Grid Grid.Row="1" Margin="5,5,5,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="35"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="80"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Qty" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="1" Text="Producto" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="2" Text="Precio" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="3" Text="Subtotal" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" TextAlignment="Right"/>
+                </Grid>
 
-                <Button x:Name="btnQuitarProducto" Grid.Row="2" Content="🗑️ Quitar Seleccionado" Height="35" Background="#FF5252" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="0,0,0,15" Click="BtnQuitarProducto_Click"/>
+                <!-- Lista del ticket -->
+                <Border Grid.Row="2" BorderBrush="#E8E0D5" BorderThickness="0,1,0,1">
+                    <ListBox x:Name="ListaTicket" Background="Transparent" BorderThickness="0"
+                             Foreground="#1A1514" FontSize="13" 
+                             HorizontalContentAlignment="Stretch"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                </Border>
 
-                <StackPanel Grid.Row="3" Margin="0,10,0,0">
-                    <TextBlock x:Name="lblTotal" Text="Total: $0.00" FontSize="22" FontWeight="Bold" Foreground="#1A1514" HorizontalAlignment="Right" Margin="0,0,0,15"/>
+                <!-- Botón quitar -->
+                <Button Grid.Row="3" Content="🗑️ Quitar Seleccionado" Height="38"
+                        Style="{StaticResource DangerButton}" Margin="0,10,0,0"
+                        Click="BtnQuitarProducto_Click"/>
 
-                    <Button x:Name="btnCobrar" Content="💵 COBRAR Y ABRIR CAJA" Height="50" Background="#1A1514" Foreground="#EFEBE4" FontSize="16" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="BtnCobrar_Click"/>
+                <!-- Total + Cobrar -->
+                <StackPanel Grid.Row="4" Margin="0,12,0,0">
+                    <Border Background="#F8F5F0" CornerRadius="8" Padding="15,10" Margin="0,0,0,10">
+                        <Grid>
+                            <TextBlock Text="TOTAL" FontSize="14" Foreground="#8C5A35" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="lblTotal" Text="0.00 Bs" FontSize="24" FontWeight="Bold" 
+                                       Foreground="#1A1514" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <Button Content="💵  COBRAR Y CERRAR MESA" Height="50"
+                            Style="{StaticResource DarkButton}" FontSize="15"
+                            Click="BtnCobrar_Click"/>
                 </StackPanel>
             </Grid>
         </Border>

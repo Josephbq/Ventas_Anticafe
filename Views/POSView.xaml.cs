@@ -1,195 +1,350 @@
-﻿using System.Windows;
 using System;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using Microsoft.Data.Sqlite;
 using Dapper;
-using WpfApp1.Data;    // Para ConexionDB
-using WpfApp1.Models;  // Para tu clase Mesa
+using WpfApp1.Data;
+using WpfApp1.Models;
 
 namespace WpfApp1.Views
 {
-
-    // Pon esto al final de tu archivo, justo antes de la última llave }
     public class ItemTicket
     {
-        public int IdDetalle { get; set; } // El ID real en la base de datos
-        public string TextoMostrar { get; set; } // Lo que verá el cajero
+        public int IdDetalle { get; set; }
+        public string NombreProducto { get; set; } = "";
+        public int Cantidad { get; set; }
+        public double PrecioUnitario { get; set; }
+        public double Subtotal { get; set; }
 
-        // Este truco hace que WPF muestre el texto automáticamente en la lista
-        public override string ToString()
-        {
-            return TextoMostrar;
-        }
+        public override string ToString() => $"{Cantidad}x {NombreProducto} — {Subtotal:F2} Bs";
     }
+
     public partial class POSView : UserControl
     {
+        private Mesa? _mesaActual;
+        private string _filtroCategoria = "TODOS";
+
         public POSView()
         {
             InitializeComponent();
             CargarMesas();
-            CargarProductos();// Llamamos a la función apenas carga la pantalla
+            CargarProductos();
         }
 
+        // ═══════════════════════════════════════════
+        // MESAS
+        // ═══════════════════════════════════════════
         private void CargarMesas()
         {
-            // Limpiamos el panel por si acaso
             PanelMesas.Children.Clear();
 
             using (var conexion = new SqliteConnection(ConexionDB.CadenaConexion))
             {
-                // Dapper trae todas las mesas de la base de datos
                 var mesas = conexion.Query<Mesa>("SELECT * FROM Mesas").AsList();
 
-                // Recorremos cada mesa y le fabricamos un botón
                 foreach (var mesa in mesas)
                 {
-                    Button btnMesa = new Button();
-                    btnMesa.Content = $"{mesa.Nombre}\n({mesa.Estado})";
-                    btnMesa.Width = 120;
-                    btnMesa.Height = 100;
-                    btnMesa.Margin = new Thickness(5);
-                    btnMesa.FontSize = 16;
-                    btnMesa.FontWeight = FontWeights.Bold;
-                    btnMesa.BorderThickness = new Thickness(0);
+                    var btnMesa = new Button();
+                    btnMesa.Width = 130;
+                    btnMesa.Height = 90;
+                    btnMesa.Margin = new Thickness(0, 0, 10, 10);
                     btnMesa.Cursor = System.Windows.Input.Cursors.Hand;
-
-                    // Guardamos el objeto Mesa entero dentro del botón para usarlo después
                     btnMesa.Tag = mesa;
+                    btnMesa.Click += BtnMesa_Click;
 
-                    // Asignamos los colores de tu paleta según el estado
+                    // Contenido del botón
+                    var sp = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center };
+                    sp.Children.Add(new TextBlock
+                    {
+                        Text = mesa.Nombre,
+                        FontSize = 15,
+                        FontWeight = FontWeights.Bold,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    });
+                    sp.Children.Add(new TextBlock
+                    {
+                        Text = mesa.Estado == "Libre" ? "● Libre" : "● Ocupada",
+                        FontSize = 11,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Margin = new Thickness(0, 4, 0, 0),
+                        Foreground = mesa.Estado == "Libre"
+                            ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#27AE60"))
+                            : new SolidColorBrush(Colors.White)
+                    });
+
+                    btnMesa.Content = sp;
+
+                    // Template para bordes redondeados
+                    var template = new ControlTemplate(typeof(Button));
+                    var borderFactory = new FrameworkElementFactory(typeof(Border));
+                    borderFactory.SetValue(Border.CornerRadiusProperty, new CornerRadius(10));
+                    borderFactory.SetValue(Border.PaddingProperty, new Thickness(10));
+                    borderFactory.Name = "border";
+
                     if (mesa.Estado == "Libre")
                     {
-                        btnMesa.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#D9CBB8")); // Beige Oscuro
-                        btnMesa.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1A1514")); // Texto Negro
+                        borderFactory.SetValue(Border.BackgroundProperty, new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EFEBE4")));
+                        borderFactory.SetValue(Border.BorderBrushProperty, new SolidColorBrush((Color)ColorConverter.ConvertFromString("#D9CBB8")));
+                        borderFactory.SetValue(Border.BorderThicknessProperty, new Thickness(2));
+                        btnMesa.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1A1514"));
                     }
                     else
                     {
-                        btnMesa.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4A3525")); // Café Oscuro
-                        btnMesa.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EFEBE4")); // Texto Claro
+                        borderFactory.SetValue(Border.BackgroundProperty, new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3D2B1F")));
+                        borderFactory.SetValue(Border.BorderBrushProperty, new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8C5A35")));
+                        borderFactory.SetValue(Border.BorderThicknessProperty, new Thickness(2));
+                        btnMesa.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EFEBE4"));
                     }
 
-                    // Le agregamos el evento Click dinámicamente
-                    btnMesa.Click += BtnMesa_Click;
+                    var contentPresenter = new FrameworkElementFactory(typeof(ContentPresenter));
+                    contentPresenter.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+                    contentPresenter.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+                    borderFactory.AppendChild(contentPresenter);
+                    template.VisualTree = borderFactory;
+                    btnMesa.Template = template;
 
-                    // Lo agregamos a la pantalla
                     PanelMesas.Children.Add(btnMesa);
                 }
             }
         }
+
+        // ═══════════════════════════════════════════
+        // PRODUCTOS
+        // ═══════════════════════════════════════════
         private void CargarProductos()
         {
             PanelProductos.Children.Clear();
 
             using (var conexion = new SqliteConnection(ConexionDB.CadenaConexion))
             {
-                // TRUCO: Si no hay productos, creamos unos de prueba automáticamente
-                var cantidad = conexion.ExecuteScalar<int>("SELECT COUNT(*) FROM Productos");
-                if (cantidad == 0)
-                {
-                    conexion.Execute("INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase) VALUES ('Catan', 'LUDOTECA', 5.00)");
-                    conexion.Execute("INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase) VALUES ('Frappé Oreo', 'CAFETERIA', 7.50)");
-                    conexion.Execute("INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase) VALUES ('Café Americano', 'CAFETERIA', 3.00)");
-                    conexion.Execute("INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase) VALUES ('Papas Fritas', 'CAFETERIA', 4.50)");
-                }
+                string sql = "SELECT * FROM Productos WHERE Activo = 1";
+                if (_filtroCategoria != "TODOS")
+                    sql += " AND Tipo = @tipo";
 
-                // Traemos todos los productos activos
-                var productos = conexion.Query<Producto>("SELECT * FROM Productos WHERE Activo = 1").AsList();
+                var productos = conexion.Query<Producto>(sql, new { tipo = _filtroCategoria }).AsList();
 
                 foreach (var prod in productos)
                 {
-                    Button btnProd = new Button();
-                    btnProd.Content = $"{prod.Nombre}\n${prod.PrecioVentaBase:0.00}";
-                    btnProd.Width = 120;
-                    btnProd.Height = 80;
-                    btnProd.Margin = new Thickness(5);
-                    btnProd.FontWeight = FontWeights.SemiBold;
-                    btnProd.BorderThickness = new Thickness(0);
+                    var btnProd = new Button();
+                    btnProd.Width = 140;
+                    btnProd.Height = 100;
+                    btnProd.Margin = new Thickness(0, 0, 10, 10);
                     btnProd.Cursor = System.Windows.Input.Cursors.Hand;
-                    btnProd.Tag = prod; // Escondemos los datos del producto en el botón
+                    btnProd.Tag = prod;
+                    btnProd.Click += BtnProducto_Click;
 
-                    // Pintamos diferente si es Ludoteca (Negro) o Cafetería (Café Acento)
-                    if (prod.Tipo == "CAFETERIA")
+                    bool disponible = prod.EstadoProducto == "Disponible" &&
+                                      (prod.EsInventariable == 0 || prod.StockActual > 0);
+                    btnProd.IsEnabled = disponible;
+
+                    // Contenido
+                    var sp = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center };
+
+                    sp.Children.Add(new TextBlock
                     {
-                        btnProd.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8C5A35"));
-                        btnProd.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EFEBE4"));
+                        Text = prod.Tipo == "JUEGOS" ? "🎲" : "☕",
+                        FontSize = 18,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    });
+                    sp.Children.Add(new TextBlock
+                    {
+                        Text = prod.Nombre,
+                        FontSize = 13,
+                        FontWeight = FontWeights.SemiBold,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        TextWrapping = TextWrapping.Wrap,
+                        TextAlignment = TextAlignment.Center,
+                        MaxWidth = 120
+                    });
+                    sp.Children.Add(new TextBlock
+                    {
+                        Text = $"{prod.PrecioVentaBase:F2} Bs",
+                        FontSize = 14,
+                        FontWeight = FontWeights.Bold,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Margin = new Thickness(0, 3, 0, 0)
+                    });
+
+                    // Indicador de stock
+                    if (prod.EsInventariable == 1)
+                    {
+                        string stockLabel = prod.StockActual == 0 ? "Sin stock" : $"Stock: {prod.StockActual}";
+                        sp.Children.Add(new TextBlock
+                        {
+                            Text = stockLabel,
+                            FontSize = 9,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            Foreground = prod.StockActual <= prod.StockMinimo
+                                ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C0392B"))
+                                : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#27AE60"))
+                        });
+                    }
+                    else if (prod.EstadoProducto != "Disponible")
+                    {
+                        sp.Children.Add(new TextBlock
+                        {
+                            Text = prod.EstadoProducto,
+                            FontSize = 9,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C0392B"))
+                        });
+                    }
+
+                    btnProd.Content = sp;
+
+                    // Template con bordes redondeados
+                    var template = new ControlTemplate(typeof(Button));
+                    var borderFactory = new FrameworkElementFactory(typeof(Border));
+                    borderFactory.SetValue(Border.CornerRadiusProperty, new CornerRadius(10));
+                    borderFactory.SetValue(Border.PaddingProperty, new Thickness(8));
+                    borderFactory.Name = "border";
+
+                    Color bgColor, fgColor;
+                    if (!disponible)
+                    {
+                        bgColor = (Color)ColorConverter.ConvertFromString("#E0D5C8");
+                        fgColor = (Color)ColorConverter.ConvertFromString("#999");
+                    }
+                    else if (prod.Tipo == "JUEGOS")
+                    {
+                        bgColor = (Color)ColorConverter.ConvertFromString("#1A1514");
+                        fgColor = (Color)ColorConverter.ConvertFromString("#EFEBE4");
                     }
                     else
                     {
-                        btnProd.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1A1514"));
-                        btnProd.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EFEBE4"));
+                        bgColor = (Color)ColorConverter.ConvertFromString("#6B4226");
+                        fgColor = (Color)ColorConverter.ConvertFromString("#EFEBE4");
                     }
 
-                    btnProd.Click += BtnProducto_Click;
+                    borderFactory.SetValue(Border.BackgroundProperty, new SolidColorBrush(bgColor));
+                    btnProd.Foreground = new SolidColorBrush(fgColor);
+
+                    var cp = new FrameworkElementFactory(typeof(ContentPresenter));
+                    cp.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+                    cp.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+                    borderFactory.AppendChild(cp);
+                    template.VisualTree = borderFactory;
+                    btnProd.Template = template;
+
                     PanelProductos.Children.Add(btnProd);
                 }
             }
         }
 
-        // Este evento captura el clic en un producto
+        // ═══════════════════════════════════════════
+        // TABS DE CATEGORÍA
+        // ═══════════════════════════════════════════
+        private void BtnTab_Click(object sender, RoutedEventArgs e)
+        {
+            var boton = sender as Button;
+            _filtroCategoria = boton?.Tag?.ToString() ?? "TODOS";
+
+            // Actualizar estilos de tabs
+            btnTabTodos.Style = (Style)FindResource("ToggleBtn");
+            btnTabCafe.Style = (Style)FindResource("ToggleBtn");
+            btnTabJuegos.Style = (Style)FindResource("ToggleBtn");
+
+            if (boton != null)
+                boton.Style = (Style)FindResource("ToggleBtnActive");
+
+            CargarProductos();
+        }
+
+        // ═══════════════════════════════════════════
+        // CLICK EN PRODUCTO
+        // ═══════════════════════════════════════════
         private void BtnProducto_Click(object sender, RoutedEventArgs e)
         {
-            Button botonPresionado = sender as Button;
-            Producto prodSeleccionado = botonPresionado.Tag as Producto;
+            var boton = sender as Button;
+            var prod = boton?.Tag as Producto;
+            if (prod == null) return;
 
             if (_mesaActual == null || _mesaActual.Estado == "Libre")
             {
-                MessageBox.Show("Primero debes seleccionar y abrir una mesa para agregarle productos.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Primero debes seleccionar y abrir una mesa.", "Aviso",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             using (var conexion = new SqliteConnection(ConexionDB.CadenaConexion))
             {
-                // 1. Buscamos cuál es el "Id" del ticket que está abierto para esta mesa
-                string sqlBuscarTicket = "SELECT IdVenta FROM VentasCabecera WHERE IdMesa = @IdMesa AND Estado = 'Abierta'";
-                int idVentaAbierta = conexion.ExecuteScalar<int>(sqlBuscarTicket, new { IdMesa = _mesaActual.IdMesa });
+                int idVentaAbierta = conexion.ExecuteScalar<int>(
+                    "SELECT IdVenta FROM VentasCabecera WHERE IdMesa = @IdMesa AND Estado = 'Abierta'",
+                    new { IdMesa = _mesaActual.IdMesa });
 
                 if (idVentaAbierta > 0)
                 {
-                    // 2. Insertamos el producto en la cuenta (VentasDetalle)
-                    string sqlInsertarDetalle = @"
-                INSERT INTO VentasDetalle (IdVenta, IdProducto, Cantidad, PrecioVendido, CostoAplicado, Subtotal, TipoOrigen) 
-                VALUES (@IdVenta, @IdProd, 1, @Precio, 0, @Precio, @TipoOrigen)"; // Costo 0 por ahora para el MVP
-
-                    conexion.Execute(sqlInsertarDetalle, new
+                    // Obtener costo del último lote (para cafetería)
+                    double costoAplicado = 0;
+                    if (prod.EsInventariable == 1)
                     {
-                        IdVenta = idVentaAbierta,
-                        IdProd = prodSeleccionado.IdProducto,
-                        Precio = prodSeleccionado.PrecioVentaBase,
-                        TipoOrigen = prodSeleccionado.Tipo
-                    });
+                        costoAplicado = conexion.ExecuteScalar<double>(
+                            "SELECT COALESCE(CostoUnitario, 0) FROM LotesInventario WHERE IdProducto = @Id ORDER BY IdLote DESC LIMIT 1",
+                            new { Id = prod.IdProducto });
+                    }
+
+                    conexion.Execute(@"
+                        INSERT INTO VentasDetalle (IdVenta, IdProducto, Cantidad, PrecioVendido, CostoAplicado, Subtotal, TipoOrigen) 
+                        VALUES (@IdVenta, @IdProd, 1, @Precio, @Costo, @Precio, @TipoOrigen)",
+                        new
+                        {
+                            IdVenta = idVentaAbierta,
+                            IdProd = prod.IdProducto,
+                            Precio = prod.PrecioVentaBase,
+                            Costo = costoAplicado,
+                            TipoOrigen = prod.Tipo
+                        });
+
+                    // Descontar stock para inventariables
+                    if (prod.EsInventariable == 1)
+                    {
+                        conexion.Execute(
+                            "UPDATE Productos SET StockActual = MAX(0, StockActual - 1) WHERE IdProducto = @Id",
+                            new { Id = prod.IdProducto });
+
+                        // Actualizar estado si se llega a 0
+                        var stockRestante = conexion.ExecuteScalar<int>(
+                            "SELECT StockActual FROM Productos WHERE IdProducto = @Id",
+                            new { Id = prod.IdProducto });
+                        if (stockRestante == 0)
+                        {
+                            conexion.Execute(
+                                "UPDATE Productos SET EstadoProducto = 'Agotado' WHERE IdProducto = @Id",
+                                new { Id = prod.IdProducto });
+                        }
+                    }
                 }
             }
 
-            // 3. Volvemos a leer la base de datos para que el ticket se dibuje actualizado
             CargarTicketMesa(_mesaActual);
+            CargarProductos(); // Refrescar stock visual
         }
 
-
-        // Variable global para recordar qué mesa estamos atendiendo
-        private Mesa _mesaActual;
-
+        // ═══════════════════════════════════════════
+        // CLICK EN MESA
+        // ═══════════════════════════════════════════
         private void BtnMesa_Click(object sender, RoutedEventArgs e)
         {
-            Button botonPresionado = sender as Button;
-            _mesaActual = botonPresionado.Tag as Mesa; // Recuperamos la mesa
+            var boton = sender as Button;
+            _mesaActual = boton?.Tag as Mesa;
+            if (_mesaActual == null) return;
 
-            // Actualizamos el título del ticket
-            lblMesaSeleccionada.Text = $"Mesa Seleccionada: {_mesaActual.Nombre}";
+            lblMesaSeleccionada.Text = $"🪑 {_mesaActual.Nombre} — {_mesaActual.Estado}";
 
             if (_mesaActual.Estado == "Libre")
             {
-                // 1. Preguntamos si quieren abrirla
-                var respuesta = MessageBox.Show($"La {_mesaActual.Nombre} está libre. ¿Deseas abrir una cuenta para esta mesa?", "Abrir Mesa", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var resp = MessageBox.Show(
+                    $"La {_mesaActual.Nombre} está libre.\n¿Deseas abrir una cuenta para esta mesa?",
+                    "Abrir Mesa", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                if (respuesta == MessageBoxResult.Yes)
-                {
+                if (resp == MessageBoxResult.Yes)
                     AbrirMesa(_mesaActual);
-                }
             }
             else
             {
-                // 2. Si ya está Ocupada, cargamos lo que están consumiendo
                 CargarTicketMesa(_mesaActual);
             }
         }
@@ -198,125 +353,216 @@ namespace WpfApp1.Views
         {
             using (var conexion = new SqliteConnection(ConexionDB.CadenaConexion))
             {
-                // Paso A: Cambiar el estado de la mesa a "Ocupada"
-                string sqlUpdateMesa = "UPDATE Mesas SET Estado = 'Ocupada' WHERE IdMesa = @Id";
-                conexion.Execute(sqlUpdateMesa, new { Id = mesa.IdMesa });
+                conexion.Execute("UPDATE Mesas SET Estado = 'Ocupada' WHERE IdMesa = @Id",
+                    new { Id = mesa.IdMesa });
 
-                // Paso B: Crear la cabecera del ticket (La cuenta abierta)
-                // Nota: Por ahora pondremos IdUsuario = 1 (el Admin). Luego lo enlazaremos al usuario logueado.
-                string sqlCrearTicket = @"
-            INSERT INTO VentasCabecera (IdUsuario, IdMesa, FechaVenta, Subtotal, TotalPagado, Estado) 
-            VALUES (@Usu, @Mesa, @Fecha, 0, 0, 'Abierta')";
-
-                conexion.Execute(sqlCrearTicket, new
-                {
-                    Usu = 1,
-                    Mesa = mesa.IdMesa,
-                    Fecha = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") // Guardamos la hora exacta
-                });
+                conexion.Execute(@"
+                    INSERT INTO VentasCabecera (IdUsuario, IdMesa, FechaVenta, Subtotal, TotalPagado, Estado) 
+                    VALUES (@Usu, @Mesa, @Fecha, 0, 0, 'Abierta')",
+                    new
+                    {
+                        Usu = 1,
+                        Mesa = mesa.IdMesa,
+                        Fecha = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    });
             }
 
-            // Paso C: Recargar los botones visuales para que la mesa se pinte de color Café
             CargarMesas();
-
-            // Dejamos el ticket limpio y listo para empezar a pedir
             ListaTicket.Items.Clear();
+            lblMesaSeleccionada.Text = $"🪑 {mesa.Nombre} — Ocupada";
         }
 
+        // ═══════════════════════════════════════════
+        // CARGAR TICKET
+        // ═══════════════════════════════════════════
         private void CargarTicketMesa(Mesa mesa)
         {
             ListaTicket.Items.Clear();
-            lblTotal.Text = "Total: $0.00";
+            lblTotal.Text = "0.00 Bs";
 
             if (mesa == null || mesa.Estado == "Libre") return;
 
             using (var conexion = new SqliteConnection(ConexionDB.CadenaConexion))
             {
-                int idVentaAbierta = conexion.ExecuteScalar<int>("SELECT IdVenta FROM VentasCabecera WHERE IdMesa = @IdMesa AND Estado = 'Abierta'", new { IdMesa = mesa.IdMesa });
+                int idVenta = conexion.ExecuteScalar<int>(
+                    "SELECT IdVenta FROM VentasCabecera WHERE IdMesa = @IdMesa AND Estado = 'Abierta'",
+                    new { IdMesa = mesa.IdMesa });
 
-                if (idVentaAbierta > 0)
+                if (idVenta > 0)
                 {
-                    // Agregamos d.IdDetalle a la consulta para saber qué borrar después
-                    string sqlDetalles = @"
-                SELECT d.IdDetalle, p.Nombre, d.Cantidad, d.Subtotal 
-                FROM VentasDetalle d
-                INNER JOIN Productos p ON d.IdProducto = p.IdProducto
-                WHERE d.IdVenta = @IdVenta";
+                    var detalles = conexion.Query(@"
+                        SELECT d.IdDetalle, p.Nombre, d.Cantidad, d.PrecioVendido, d.Subtotal 
+                        FROM VentasDetalle d
+                        INNER JOIN Productos p ON d.IdProducto = p.IdProducto
+                        WHERE d.IdVenta = @IdVenta",
+                        new { IdVenta = idVenta });
 
-                    var productosEnTicket = conexion.Query(sqlDetalles, new { IdVenta = idVentaAbierta });
                     double totalSuma = 0;
 
-                    foreach (var item in productosEnTicket)
+                    foreach (var item in detalles)
                     {
-                        // En lugar de texto, agregamos nuestro objeto con el ID oculto
-                        ListaTicket.Items.Add(new ItemTicket
+                        var ticketItem = new ItemTicket
                         {
                             IdDetalle = (int)item.IdDetalle,
-                            TextoMostrar = $"{item.Cantidad}x {item.Nombre} - ${(double)item.Subtotal:0.00}"
-                        });
-                        totalSuma += (double)item.Subtotal;
+                            NombreProducto = (string)item.Nombre,
+                            Cantidad = (int)(long)item.Cantidad,
+                            PrecioUnitario = (double)item.PrecioVendido,
+                            Subtotal = (double)item.Subtotal
+                        };
+
+                        // Crear visual del item
+                        var grid = new Grid();
+                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(35) });
+                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(70) });
+                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(80) });
+
+                        var txtQty = new TextBlock
+                        {
+                            Text = ticketItem.Cantidad.ToString(),
+                            FontSize = 13,
+                            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8C5A35")),
+                            VerticalAlignment = VerticalAlignment.Center
+                        };
+                        Grid.SetColumn(txtQty, 0);
+
+                        var txtNombre = new TextBlock
+                        {
+                            Text = ticketItem.NombreProducto,
+                            FontSize = 13,
+                            FontWeight = FontWeights.SemiBold,
+                            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1A1514")),
+                            VerticalAlignment = VerticalAlignment.Center
+                        };
+                        Grid.SetColumn(txtNombre, 1);
+
+                        var txtPrecio = new TextBlock
+                        {
+                            Text = $"{ticketItem.PrecioUnitario:F2}",
+                            FontSize = 12,
+                            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8C5A35")),
+                            VerticalAlignment = VerticalAlignment.Center
+                        };
+                        Grid.SetColumn(txtPrecio, 2);
+
+                        var txtSubtotal = new TextBlock
+                        {
+                            Text = $"{ticketItem.Subtotal:F2} Bs",
+                            FontSize = 13,
+                            FontWeight = FontWeights.SemiBold,
+                            Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1A1514")),
+                            VerticalAlignment = VerticalAlignment.Center,
+                            TextAlignment = TextAlignment.Right
+                        };
+                        Grid.SetColumn(txtSubtotal, 3);
+
+                        grid.Children.Add(txtQty);
+                        grid.Children.Add(txtNombre);
+                        grid.Children.Add(txtPrecio);
+                        grid.Children.Add(txtSubtotal);
+
+                        var listItem = new ListBoxItem
+                        {
+                            Content = grid,
+                            Tag = ticketItem,
+                            Padding = new Thickness(5, 8, 5, 8),
+                            BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F0EBE4")),
+                            BorderThickness = new Thickness(0, 0, 0, 1)
+                        };
+
+                        ListaTicket.Items.Add(listItem);
+                        totalSuma += ticketItem.Subtotal;
                     }
 
-                    lblTotal.Text = $"Total: ${totalSuma:0.00}";
-                    conexion.Execute("UPDATE VentasCabecera SET Subtotal = @Total, TotalPagado = @Total WHERE IdVenta = @IdVenta", new { Total = totalSuma, IdVenta = idVentaAbierta });
+                    lblTotal.Text = $"{totalSuma:F2} Bs";
+                    conexion.Execute(
+                        "UPDATE VentasCabecera SET Subtotal = @Total, TotalPagado = @Total WHERE IdVenta = @IdVenta",
+                        new { Total = totalSuma, IdVenta = idVenta });
                 }
             }
         }
 
-        // === NUEVO: LÓGICA PARA ELIMINAR UN PRODUCTO ===
+        // ═══════════════════════════════════════════
+        // QUITAR PRODUCTO
+        // ═══════════════════════════════════════════
         private void BtnQuitarProducto_Click(object sender, RoutedEventArgs e)
         {
-            // Validamos que haya seleccionado algo en la lista
-            if (ListaTicket.SelectedItem == null)
+            var selectedItem = ListaTicket.SelectedItem as ListBoxItem;
+            if (selectedItem == null)
             {
-                MessageBox.Show("Por favor, selecciona un producto de la lista para quitarlo.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Selecciona un producto de la lista para quitarlo.", "Aviso",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // Extraemos nuestro objeto con el ID oculto
-            ItemTicket itemSeleccionado = ListaTicket.SelectedItem as ItemTicket;
+            var ticketItem = selectedItem.Tag as ItemTicket;
+            if (ticketItem == null) return;
 
             using (var conexion = new SqliteConnection(ConexionDB.CadenaConexion))
             {
-                // Lo borramos físicamente de la base de datos
-                conexion.Execute("DELETE FROM VentasDetalle WHERE IdDetalle = @Id", new { Id = itemSeleccionado.IdDetalle });
+                // Obtener el producto para restaurar stock
+                var detalle = conexion.QueryFirstOrDefault(@"
+                    SELECT IdProducto, Cantidad FROM VentasDetalle WHERE IdDetalle = @Id",
+                    new { Id = ticketItem.IdDetalle });
+
+                if (detalle != null)
+                {
+                    int idProd = (int)(long)detalle.IdProducto;
+                    int cant = (int)(long)detalle.Cantidad;
+
+                    // Restaurar stock
+                    var producto = conexion.QueryFirstOrDefault<Producto>(
+                        "SELECT * FROM Productos WHERE IdProducto = @Id", new { Id = idProd });
+
+                    if (producto != null && producto.EsInventariable == 1)
+                    {
+                        conexion.Execute(
+                            "UPDATE Productos SET StockActual = StockActual + @Cant, EstadoProducto = 'Disponible' WHERE IdProducto = @Id",
+                            new { Cant = cant, Id = idProd });
+                    }
+                }
+
+                conexion.Execute("DELETE FROM VentasDetalle WHERE IdDetalle = @Id",
+                    new { Id = ticketItem.IdDetalle });
             }
 
-            // Recargamos el ticket para que actualice la lista y el Total
-            CargarTicketMesa(_mesaActual);
+            CargarTicketMesa(_mesaActual!);
+            CargarProductos();
         }
 
-        // === NUEVO: LÓGICA PARA COBRAR ===
+        // ═══════════════════════════════════════════
+        // COBRAR
+        // ═══════════════════════════════════════════
         private void BtnCobrar_Click(object sender, RoutedEventArgs e)
         {
             if (_mesaActual == null || _mesaActual.Estado == "Libre")
             {
-                MessageBox.Show("No hay ninguna cuenta abierta para cobrar.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("No hay ninguna cuenta abierta para cobrar.", "Aviso",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             using (var conexion = new SqliteConnection(ConexionDB.CadenaConexion))
             {
-                // 1. Buscamos el ticket
-                int idVentaAbierta = conexion.ExecuteScalar<int>("SELECT IdVenta FROM VentasCabecera WHERE IdMesa = @IdMesa AND Estado = 'Abierta'", new { IdMesa = _mesaActual.IdMesa });
+                int idVenta = conexion.ExecuteScalar<int>(
+                    "SELECT IdVenta FROM VentasCabecera WHERE IdMesa = @IdMesa AND Estado = 'Abierta'",
+                    new { IdMesa = _mesaActual.IdMesa });
 
-                if (idVentaAbierta > 0)
+                if (idVenta > 0)
                 {
-                    // 2. Cerramos el Ticket (Pagada)
-                    conexion.Execute("UPDATE VentasCabecera SET Estado = 'Pagada' WHERE IdVenta = @Id", new { Id = idVentaAbierta });
+                    conexion.Execute("UPDATE VentasCabecera SET Estado = 'Pagada' WHERE IdVenta = @Id",
+                        new { Id = idVenta });
+                    conexion.Execute("UPDATE Mesas SET Estado = 'Libre' WHERE IdMesa = @IdMesa",
+                        new { IdMesa = _mesaActual.IdMesa });
 
-                    // 3. Liberamos la Mesa
-                    conexion.Execute("UPDATE Mesas SET Estado = 'Libre' WHERE IdMesa = @IdMesa", new { IdMesa = _mesaActual.IdMesa });
+                    MessageBox.Show(
+                        $"¡Cobro realizado con éxito!\nLa {_mesaActual.Nombre} vuelve a estar disponible.",
+                        "✅ Caja Registrada", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    MessageBox.Show($"¡Cobro realizado con éxito!\nLa {_mesaActual.Nombre} vuelve a estar disponible.", "Caja", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    // 4. Limpiamos la pantalla
                     _mesaActual = null;
-                    lblMesaSeleccionada.Text = "Mesa Seleccionada: Ninguna";
+                    lblMesaSeleccionada.Text = "Selecciona una mesa";
                     ListaTicket.Items.Clear();
-                    lblTotal.Text = "Total: $0.00";
-
-                    // 5. Redibujamos las mesas para que vuelva a estar Beige
+                    lblTotal.Text = "0.00 Bs";
                     CargarMesas();
                 }
             }

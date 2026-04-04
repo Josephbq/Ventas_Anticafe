@@ -1,57 +1,258 @@
-﻿<UserControl x:Class="WpfApp1.Views.InventarioView"
+<UserControl x:Class="WpfApp1.Views.InventarioView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             Background="Transparent" d:DesignHeight="600" d:DesignWidth="800">
-    <Grid Margin="0,0,10,0">
+             Background="Transparent" d:DesignHeight="700" d:DesignWidth="1000">
+
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="340"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="0" Background="#F8F5F0" BorderBrush="#D4C4B7" BorderThickness="1" CornerRadius="8" Padding="20" Margin="0,0,15,0">
-            <StackPanel>
-                <TextBlock Text="Registrar Producto" FontSize="20" FontWeight="Bold" Foreground="#1A1514" Margin="0,0,0,20"/>
+        <!-- ═══════════════════════════════════════ -->
+        <!-- PANEL IZQUIERDO: FORMULARIOS             -->
+        <!-- ═══════════════════════════════════════ -->
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,15,0">
+            <StackPanel x:Name="panelFormularios">
 
-                <TextBlock Text="Nombre del Producto:" FontWeight="SemiBold" Foreground="#1A1514" Margin="0,0,0,5"/>
-                <TextBox x:Name="txtNombre" Height="35" FontSize="14" Padding="5" Margin="0,0,0,15" BorderBrush="#D4C4B7"/>
+                <!-- Toggle: Nuevo Producto / Nuevo Lote -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="Acción" FontSize="12" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="btnModoProducto" Content="📦 Nuevo Producto" 
+                                    Style="{StaticResource ToggleBtnActive}" Click="BtnModoProducto_Click"/>
+                            <Button x:Name="btnModoLote" Content="📋 Nuevo Lote" 
+                                    Style="{StaticResource ToggleBtn}" Click="BtnModoLote_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
 
-                <TextBlock Text="Categoría (Tipo):" FontWeight="SemiBold" Foreground="#1A1514" Margin="0,0,0,5"/>
-                <ComboBox x:Name="cmbTipo" Height="35" FontSize="14" Padding="5" Margin="0,0,0,15" BorderBrush="#D4C4B7">
-                    <ComboBoxItem Content="CAFETERIA" IsSelected="True"/>
-                    <ComboBoxItem Content="LUDOTECA"/>
-                </ComboBox>
+                <!-- Formulario NUEVO PRODUCTO -->
+                <Border x:Name="panelNuevoProducto" Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="Registrar Producto" FontSize="18" FontWeight="Bold" 
+                                   Foreground="#1A1514" Margin="0,0,0,18"/>
 
-                <TextBlock Text="Precio de Venta ($):" FontWeight="SemiBold" Foreground="#1A1514" Margin="0,0,0,5"/>
-                <TextBox x:Name="txtPrecio" Height="35" FontSize="14" Padding="5" Margin="0,0,0,25" BorderBrush="#D4C4B7"/>
+                        <TextBlock Text="NOMBRE" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtNombre" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
 
-                <Button x:Name="btnGuardar" Content="💾 GUARDAR PRODUCTO" Height="45" Background="#8C5A35" Foreground="#EFEBE4" FontSize="14" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="BtnGuardar_Click"/>
+                        <TextBlock Text="CATEGORÍA" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="cmbTipo" Style="{StaticResource ModernComboBox}" Margin="0,0,0,12"
+                                  SelectionChanged="CmbTipo_SelectionChanged">
+                            <ComboBoxItem Content="CAFETERIA" IsSelected="True"/>
+                            <ComboBoxItem Content="JUEGOS"/>
+                        </ComboBox>
 
-                <TextBlock x:Name="lblMensaje" Foreground="#4CAF50" FontWeight="SemiBold" Margin="0,15,0,0" TextAlignment="Center" TextWrapping="Wrap"/>
+                        <TextBlock Text="PRECIO DE VENTA (Bs)" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtPrecio" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
+
+                        <!-- Campos condicionales para Cafetería -->
+                        <StackPanel x:Name="panelCamposCafe">
+                            <TextBlock Text="COSTO DE COMPRA (Bs)" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <TextBox x:Name="txtCosto" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
+
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="STOCK INICIAL" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <TextBox x:Name="txtStock" Style="{StaticResource ModernTextBox}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="STOCK MÍNIMO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <TextBox x:Name="txtStockMin" Style="{StaticResource ModernTextBox}"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Estado del producto -->
+                        <TextBlock Text="ESTADO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="cmbEstado" Style="{StaticResource ModernComboBox}" Margin="0,0,0,18">
+                            <ComboBoxItem Content="Disponible" IsSelected="True"/>
+                            <ComboBoxItem Content="Agotado"/>
+                            <ComboBoxItem Content="Dañado"/>
+                            <ComboBoxItem Content="Suspendido"/>
+                        </ComboBox>
+
+                        <Button Content="💾 GUARDAR PRODUCTO" Style="{StaticResource PrimaryButton}" 
+                                Height="45" Click="BtnGuardar_Click"/>
+
+                        <TextBlock x:Name="lblMensaje" Foreground="#27AE60" FontWeight="SemiBold" 
+                                   Margin="0,12,0,0" TextAlignment="Center" TextWrapping="Wrap" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Formulario NUEVO LOTE -->
+                <Border x:Name="panelNuevoLote" Style="{StaticResource Card}" Visibility="Collapsed" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="Registrar Nuevo Lote" FontSize="18" FontWeight="Bold" 
+                                   Foreground="#1A1514" Margin="0,0,0,18"/>
+
+                        <TextBlock Text="PRODUCTO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="cmbProductoLote" Style="{StaticResource ModernComboBox}" 
+                                  DisplayMemberPath="Nombre" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="COSTO UNITARIO (Bs)" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtCostoLote" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="PRECIO VENTA NUEVO (Bs)" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtPrecioVentaLote" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="CANTIDAD" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtCantidadLote" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
+
+                        <TextBlock Text="NOTAS (opcional)" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtNotasLote" Style="{StaticResource ModernTextBox}" Height="60" 
+                                 TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,18"/>
+
+                        <Button Content="📋 REGISTRAR LOTE" Style="{StaticResource SuccessButton}" 
+                                Height="45" Click="BtnGuardarLote_Click"/>
+
+                        <TextBlock x:Name="lblMensajeLote" Foreground="#27AE60" FontWeight="SemiBold" 
+                                   Margin="0,12,0,0" TextAlignment="Center" TextWrapping="Wrap" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Acciones sobre producto seleccionado -->
+                <Border x:Name="panelAcciones" Style="{StaticResource Card}" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="Acciones del Producto" FontSize="14" FontWeight="Bold" 
+                                   Foreground="#1A1514" Margin="0,0,0,10"/>
+                        <TextBlock x:Name="lblProductoSel" Text="" FontSize="13" Foreground="#8C5A35" Margin="0,0,0,10"/>
+
+                        <TextBlock Text="CAMBIAR ESTADO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="cmbCambiarEstado" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10">
+                            <ComboBoxItem Content="Disponible"/>
+                            <ComboBoxItem Content="Agotado"/>
+                            <ComboBoxItem Content="Dañado"/>
+                            <ComboBoxItem Content="Suspendido"/>
+                        </ComboBox>
+                        <Button Content="✏️ Actualizar Estado" Style="{StaticResource PrimaryButton}" 
+                                Height="38" Click="BtnActualizarEstado_Click"/>
+                    </StackPanel>
+                </Border>
+
             </StackPanel>
-        </Border>
+        </ScrollViewer>
 
-        <Border Grid.Column="1" Background="#FFFFFF" BorderBrush="#D4C4B7" BorderThickness="1" CornerRadius="8" Padding="15">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+        <!-- ═══════════════════════════════════════ -->
+        <!-- PANEL DERECHO: TABLAS SEPARADAS          -->
+        <!-- ═══════════════════════════════════════ -->
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
 
-                <TextBlock Grid.Row="0" Text="Catálogo de Productos Activos" FontSize="20" FontWeight="Bold" Foreground="#1A1514" Margin="0,0,0,15"/>
+                <!-- ═══ TABLA CAFETERÍA ═══ -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                <DataGrid x:Name="GridProductos" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" 
-                          Background="White" BorderBrush="#E0E0E0" RowHeight="35" HeadersVisibility="Column">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding IdProducto}" Width="50"/>
-                        <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
-                        <DataGridTextColumn Header="Categoría" Binding="{Binding Tipo}" Width="120"/>
-                        <DataGridTextColumn Header="Precio ($)" Binding="{Binding PrecioVentaBase}" Width="100"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Grid>
-        </Border>
+                        <Grid Grid.Row="0" Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="☕" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Productos de Cafetería" FontSize="16" FontWeight="Bold" 
+                                           Foreground="#1A1514" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock x:Name="lblConteoCafe" Text="0 productos" FontSize="12" 
+                                       Foreground="#8C5A35" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <DataGrid x:Name="GridCafeteria" Grid.Row="1" 
+                                  Style="{StaticResource ModernDataGrid}"
+                                  ColumnHeaderStyle="{StaticResource ModernColumnHeader}"
+                                  RowStyle="{StaticResource ModernDataGridRow}"
+                                  CellStyle="{StaticResource ModernDataGridCell}"
+                                  SelectionChanged="GridProductos_SelectionChanged"
+                                  MaxHeight="280">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding IdProducto}" Width="45"/>
+                                <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
+                                <DataGridTextColumn Header="Precio (Bs)" Binding="{Binding PrecioVentaBase, StringFormat=F2}" Width="85"/>
+                                <DataGridTextColumn Header="Stock" Binding="{Binding StockActual}" Width="60"/>
+                                <DataGridTextColumn Header="Mín" Binding="{Binding StockMinimo}" Width="45"/>
+                                <DataGridTextColumn Header="Estado" Binding="{Binding EstadoProducto}" Width="95"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+
+                <!-- ═══ TABLA JUEGOS ═══ -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🎲" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Juegos de Mesa" FontSize="16" FontWeight="Bold" 
+                                           Foreground="#1A1514" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock x:Name="lblConteoJuegos" Text="0 juegos" FontSize="12" 
+                                       Foreground="#8C5A35" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <DataGrid x:Name="GridJuegos" Grid.Row="1" 
+                                  Style="{StaticResource ModernDataGrid}"
+                                  ColumnHeaderStyle="{StaticResource ModernColumnHeader}"
+                                  RowStyle="{StaticResource ModernDataGridRow}"
+                                  CellStyle="{StaticResource ModernDataGridCell}"
+                                  SelectionChanged="GridProductos_SelectionChanged"
+                                  MaxHeight="280">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding IdProducto}" Width="45"/>
+                                <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
+                                <DataGridTextColumn Header="Precio/Hora (Bs)" Binding="{Binding PrecioVentaBase, StringFormat=F2}" Width="110"/>
+                                <DataGridTextColumn Header="Copias" Binding="{Binding StockActual}" Width="65"/>
+                                <DataGridTextColumn Header="Estado" Binding="{Binding EstadoProducto}" Width="95"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+
+                <!-- Historial de Lotes -->
+                <Border x:Name="panelLotes" Style="{StaticResource Card}" MaxHeight="220" Visibility="Collapsed">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="lblTituloLotes" Grid.Row="0" Text="📋 Historial de Lotes" FontSize="14" 
+                                   FontWeight="Bold" Foreground="#1A1514" Margin="0,0,0,10"/>
+
+                        <DataGrid x:Name="GridLotes" Grid.Row="1"
+                                  Style="{StaticResource ModernDataGrid}"
+                                  ColumnHeaderStyle="{StaticResource ModernColumnHeader}"
+                                  RowStyle="{StaticResource ModernDataGridRow}"
+                                  CellStyle="{StaticResource ModernDataGridCell}"
+                                  RowHeight="35">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Fecha Ingreso" Binding="{Binding FechaIngreso}" Width="110"/>
+                                <DataGridTextColumn Header="Costo (Bs)" Binding="{Binding CostoUnitario, StringFormat=F2}" Width="85"/>
+                                <DataGridTextColumn Header="Precio Venta (Bs)" Binding="{Binding PrecioVentaLote, StringFormat=F2}" Width="120"/>
+                                <DataGridTextColumn Header="Cant. Inicial" Binding="{Binding CantidadInicial}" Width="90"/>
+                                <DataGridTextColumn Header="Disponible" Binding="{Binding CantidadDisponible}" Width="85"/>
+                                <DataGridTextColumn Header="Notas" Binding="{Binding Notas}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

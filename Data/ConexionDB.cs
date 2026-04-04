@@ -1,31 +1,28 @@
-﻿using System;
+using System;
 using System.IO;
 using Microsoft.Data.Sqlite;
 
-namespace WpfApp1.Data // ¡Ojo! Cambia "TuProyectoWPF" por el nombre real de tu proyecto
+namespace WpfApp1.Data
 {
     public static class ConexionDB
     {
-        // El archivo se creará en la misma carpeta donde esté tu .exe
         private static string dbName = "BoardGameCafe.db";
         private static string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dbName);
 
-        // Cadena de conexión que usarás en todas tus consultas
         public static string CadenaConexion = $"Data Source={dbPath}";
 
         public static void InicializarBaseDeDatos()
         {
-            // Si el archivo ya existe, las tablas ya están creadas, salimos.
             if (File.Exists(dbPath)) return;
 
-            // Si no existe, SQLite crea el archivo en blanco al abrir la conexión
             using (var conexion = new SqliteConnection(CadenaConexion))
             {
                 conexion.Open();
 
-                // Aquí pegamos TODO el script de diseño relacional usando el arroba (@) para textos multilínea
                 string scriptInicial = @"
-                    -- 1. Tablas de Configuración y Usuarios
+                    -- ══════════════════════════════════════════════
+                    -- 1. USUARIOS Y CLIENTES
+                    -- ══════════════════════════════════════════════
                     CREATE TABLE Usuarios (
                         IdUsuario INTEGER PRIMARY KEY AUTOINCREMENT,
                         Nombre TEXT NOT NULL,
@@ -43,16 +40,19 @@ namespace WpfApp1.Data // ¡Ojo! Cambia "TuProyectoWPF" por el nombre real de tu
                         FechaUltimaVisita TEXT
                     );
 
-                    -- 2. El Corazón del Inventario
+                    -- ══════════════════════════════════════════════
+                    -- 2. INVENTARIO Y PRODUCTOS
+                    -- ══════════════════════════════════════════════
                     CREATE TABLE Productos (
                         IdProducto INTEGER PRIMARY KEY AUTOINCREMENT,
                         CodigoBarras TEXT UNIQUE,
                         Nombre TEXT NOT NULL,
-                        Tipo TEXT NOT NULL,
+                        Tipo TEXT NOT NULL,                        -- 'CAFETERIA' o 'JUEGOS'
                         PrecioVentaBase REAL NOT NULL,
                         StockActual INTEGER DEFAULT 0,
                         StockMinimo INTEGER DEFAULT 0,
-                        EsInventariable INTEGER DEFAULT 1,
+                        EsInventariable INTEGER DEFAULT 1,        -- 1=sí (cafetería), 0=no (juegos/servicios)
+                        EstadoProducto TEXT DEFAULT 'Disponible',  -- Disponible, Agotado, Dañado, Suspendido
                         Activo INTEGER DEFAULT 1
                     );
 
@@ -60,9 +60,11 @@ namespace WpfApp1.Data // ¡Ojo! Cambia "TuProyectoWPF" por el nombre real de tu
                         IdLote INTEGER PRIMARY KEY AUTOINCREMENT,
                         IdProducto INTEGER NOT NULL,
                         CostoUnitario REAL NOT NULL,
+                        PrecioVentaLote REAL NOT NULL,
                         CantidadInicial INTEGER NOT NULL,
                         CantidadDisponible INTEGER NOT NULL,
                         FechaIngreso TEXT NOT NULL,
+                        Notas TEXT,
                         FOREIGN KEY(IdProducto) REFERENCES Productos(IdProducto)
                     );
 
@@ -77,7 +79,9 @@ namespace WpfApp1.Data // ¡Ojo! Cambia "TuProyectoWPF" por el nombre real de tu
                         FOREIGN KEY(IdUsuario) REFERENCES Usuarios(IdUsuario)
                     );
 
-                    -- 3. Operación del Local (Mesas y Ventas)
+                    -- ══════════════════════════════════════════════
+                    -- 3. MESAS Y VENTAS
+                    -- ══════════════════════════════════════════════
                     CREATE TABLE Mesas (
                         IdMesa INTEGER PRIMARY KEY AUTOINCREMENT,
                         Nombre TEXT NOT NULL,
@@ -112,22 +116,68 @@ namespace WpfApp1.Data // ¡Ojo! Cambia "TuProyectoWPF" por el nombre real de tu
                         FOREIGN KEY(IdProducto) REFERENCES Productos(IdProducto)
                     );
 
-                    -- INSERCIONES POR DEFECTO PARA PODER ARRANCAR EL SISTEMA --
+                    -- ══════════════════════════════════════════════
+                    -- 4. DATOS INICIALES
+                    -- ══════════════════════════════════════════════
                     
-                    -- Usuario Admin por defecto
+                    -- Usuario Admin
                     INSERT INTO Usuarios (Nombre, Username, Password, Rol) 
                     VALUES ('Administrador General', 'admin', 'admin123', 'Admin');
 
-                    -- Mesas por defecto
+                    -- Usuario Vendedor (prueba)
+                    INSERT INTO Usuarios (Nombre, Username, Password, Rol) 
+                    VALUES ('Vendedor Prueba', 'vendedor1', 'venta123', 'Vendedor');
+
+                    -- Usuario Super (prueba)
+                    INSERT INTO Usuarios (Nombre, Username, Password, Rol) 
+                    VALUES ('Supervisor General', 'super1', 'super123', 'Super');
+
+                    -- Mesas
                     INSERT INTO Mesas (Nombre, Estado) VALUES ('Mesa 1', 'Libre');
                     INSERT INTO Mesas (Nombre, Estado) VALUES ('Mesa 2', 'Libre');
                     INSERT INTO Mesas (Nombre, Estado) VALUES ('Mesa 3', 'Libre');
+                    INSERT INTO Mesas (Nombre, Estado) VALUES ('Mesa 4', 'Libre');
                     INSERT INTO Mesas (Nombre, Estado) VALUES ('Barra', 'Libre');
+
+                    -- Productos de Cafetería (inventariables)
+                    INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase, StockActual, StockMinimo, EsInventariable, EstadoProducto) 
+                    VALUES ('Café Americano', 'CAFETERIA', 8.00, 50, 10, 1, 'Disponible');
+                    INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase, StockActual, StockMinimo, EsInventariable, EstadoProducto) 
+                    VALUES ('Frappé Oreo', 'CAFETERIA', 15.00, 30, 5, 1, 'Disponible');
+                    INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase, StockActual, StockMinimo, EsInventariable, EstadoProducto) 
+                    VALUES ('Papas Fritas', 'CAFETERIA', 10.00, 25, 5, 1, 'Disponible');
+                    INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase, StockActual, StockMinimo, EsInventariable, EstadoProducto) 
+                    VALUES ('Sandwich Club', 'CAFETERIA', 18.00, 20, 5, 1, 'Disponible');
+                    INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase, StockActual, StockMinimo, EsInventariable, EstadoProducto) 
+                    VALUES ('Pepsi', 'CAFETERIA', 5.00, 40, 10, 1, 'Disponible');
+
+                    -- Juegos (NO inventariables - son servicios, stock = copias disponibles)
+                    INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase, StockActual, StockMinimo, EsInventariable, EstadoProducto) 
+                    VALUES ('Catan', 'JUEGOS', 40.00, 2, 0, 0, 'Disponible');
+                    INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase, StockActual, StockMinimo, EsInventariable, EstadoProducto) 
+                    VALUES ('Monopoly', 'JUEGOS', 30.00, 3, 0, 0, 'Disponible');
+                    INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase, StockActual, StockMinimo, EsInventariable, EstadoProducto) 
+                    VALUES ('UNO', 'JUEGOS', 15.00, 4, 0, 0, 'Disponible');
+                    INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase, StockActual, StockMinimo, EsInventariable, EstadoProducto) 
+                    VALUES ('Risk', 'JUEGOS', 35.00, 1, 0, 0, 'Disponible');
+                    INSERT INTO Productos (Nombre, Tipo, PrecioVentaBase, StockActual, StockMinimo, EsInventariable, EstadoProducto) 
+                    VALUES ('Jenga', 'JUEGOS', 20.00, 2, 0, 0, 'Disponible');
+
+                    -- Lotes iniciales para productos de cafetería
+                    INSERT INTO LotesInventario (IdProducto, CostoUnitario, PrecioVentaLote, CantidadInicial, CantidadDisponible, FechaIngreso, Notas) 
+                    VALUES (1, 3.00, 8.00, 50, 50, '2026-04-01', 'Lote inicial café');
+                    INSERT INTO LotesInventario (IdProducto, CostoUnitario, PrecioVentaLote, CantidadInicial, CantidadDisponible, FechaIngreso, Notas) 
+                    VALUES (2, 7.00, 15.00, 30, 30, '2026-04-01', 'Lote inicial frappé');
+                    INSERT INTO LotesInventario (IdProducto, CostoUnitario, PrecioVentaLote, CantidadInicial, CantidadDisponible, FechaIngreso, Notas) 
+                    VALUES (3, 4.00, 10.00, 25, 25, '2026-04-01', 'Lote inicial papas');
+                    INSERT INTO LotesInventario (IdProducto, CostoUnitario, PrecioVentaLote, CantidadInicial, CantidadDisponible, FechaIngreso, Notas) 
+                    VALUES (4, 8.00, 18.00, 20, 20, '2026-04-01', 'Lote inicial sandwich');
+                    INSERT INTO LotesInventario (IdProducto, CostoUnitario, PrecioVentaLote, CantidadInicial, CantidadDisponible, FechaIngreso, Notas) 
+                    VALUES (5, 2.00, 5.00, 40, 40, '2026-04-01', 'Lote inicial pepsi');
                 ";
 
                 using (var comando = new SqliteCommand(scriptInicial, conexion))
                 {
-                    // Ejecuta todo el script de golpe
                     comando.ExecuteNonQuery();
                 }
             }

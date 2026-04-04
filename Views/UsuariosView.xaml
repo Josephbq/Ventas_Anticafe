@@ -1,0 +1,161 @@
+<UserControl x:Class="WpfApp1.Views.UsuariosView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Background="Transparent" d:DesignHeight="700" d:DesignWidth="1000">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- PANEL IZQUIERDO: FORMULARIO              -->
+        <!-- ═══════════════════════════════════════ -->
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,15,0">
+            <StackPanel>
+
+                <!-- Formulario Nuevo Usuario -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <TextBlock Text="👤" FontSize="22" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Registrar Nuevo Usuario" FontSize="18" FontWeight="Bold" 
+                                       Foreground="#1A1514" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock Text="NOMBRE COMPLETO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtNombreUsuario" Style="{StaticResource ModernTextBox}" Margin="0,0,0,14"/>
+
+                        <TextBlock Text="NOMBRE DE USUARIO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtUsername" Style="{StaticResource ModernTextBox}" Margin="0,0,0,14"/>
+
+                        <TextBlock Text="CONTRASEÑA" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtPassword" Style="{StaticResource ModernTextBox}" Margin="0,0,0,14"/>
+
+                        <TextBlock Text="ROL" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="cmbRol" Style="{StaticResource ModernComboBox}" Margin="0,0,0,20">
+                            <ComboBoxItem Content="Vendedor" IsSelected="True"/>
+                        </ComboBox>
+
+                        <!-- Info -->
+                        <Border Background="#F8F5F0" CornerRadius="8" Padding="12,10" Margin="0,0,0,18">
+                            <StackPanel>
+                                <TextBlock Text="ℹ️ Solo se pueden crear usuarios con rol Vendedor." 
+                                           FontSize="11" Foreground="#8C5A35" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Button Content="💾 GUARDAR USUARIO" Style="{StaticResource PrimaryButton}" 
+                                Height="45" Click="BtnGuardarUsuario_Click"/>
+
+                        <TextBlock x:Name="lblMensaje" Foreground="#27AE60" FontWeight="SemiBold" 
+                                   Margin="0,12,0,0" TextAlignment="Center" TextWrapping="Wrap" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Acciones sobre usuario seleccionado -->
+                <Border x:Name="panelAccionesUsuario" Style="{StaticResource Card}" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="Acciones del Usuario" FontSize="14" FontWeight="Bold" 
+                                   Foreground="#1A1514" Margin="0,0,0,10"/>
+                        <TextBlock x:Name="lblUsuarioSeleccionado" Text="" FontSize="13" 
+                                   Foreground="#8C5A35" Margin="0,0,0,5" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="lblRolSeleccionado" Text="" FontSize="12" 
+                                   Foreground="#6B4226" Margin="0,0,0,15"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button x:Name="btnToggleActivo" Grid.Column="0" Content="🔒 Desactivar" 
+                                    Style="{StaticResource DangerButton}" Height="40"
+                                    Click="BtnToggleActivo_Click"/>
+
+                            <Button Grid.Column="2" Content="🔑 Reset Pass" 
+                                    Style="{StaticResource PrimaryButton}" Height="40"
+                                    Click="BtnResetPassword_Click"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- PANEL DERECHO: TABLA DE USUARIOS         -->
+        <!-- ═══════════════════════════════════════ -->
+        <Border Grid.Column="1" Style="{StaticResource Card}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="👥" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="Lista de Usuarios" FontSize="16" FontWeight="Bold" 
+                                   Foreground="#1A1514" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock x:Name="lblConteoUsuarios" Text="0 usuarios" FontSize="12" 
+                               Foreground="#8C5A35" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                </Grid>
+
+                <DataGrid x:Name="GridUsuarios" Grid.Row="1" 
+                          Style="{StaticResource ModernDataGrid}"
+                          ColumnHeaderStyle="{StaticResource ModernColumnHeader}"
+                          RowStyle="{StaticResource ModernDataGridRow}"
+                          CellStyle="{StaticResource ModernDataGridCell}"
+                          SelectionChanged="GridUsuarios_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding IdUsuario}" Width="50"/>
+                        <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
+                        <DataGridTextColumn Header="Usuario" Binding="{Binding Username}" Width="120"/>
+                        <DataGridTextColumn Header="Rol" Binding="{Binding Rol}" Width="100"/>
+                        <DataGridTemplateColumn Header="Estado" Width="90">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="10" Padding="8,3" HorizontalAlignment="Center">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="#E8F5E9"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Activo}" Value="0">
+                                                        <Setter Property="Background" Value="#FFEBEE"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock HorizontalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="Activo"/>
+                                                    <Setter Property="Foreground" Value="#27AE60"/>
+                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                    <Setter Property="FontSize" Value="11"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Activo}" Value="0">
+                                                            <Setter Property="Text" Value="Inactivo"/>
+                                                            <Setter Property="Foreground" Value="#C0392B"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
