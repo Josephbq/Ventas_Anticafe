@@ -8,64 +8,71 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="360"/>
+            <ColumnDefinition Width="340"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- ═══════════════════════════════════════ -->
         <!-- PANEL IZQUIERDO: FORMULARIO              -->
         <!-- ═══════════════════════════════════════ -->
-        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,15,0">
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,12,0">
             <StackPanel>
 
                 <!-- Formulario Nuevo Usuario -->
-                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <Border Style="{StaticResource Card}" Margin="0,0,0,10">
                     <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <TextBlock Text="👤" FontSize="22" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <TextBlock Text="Registrar Nuevo Usuario" FontSize="18" FontWeight="Bold" 
-                                       Foreground="#1A1514" VerticalAlignment="Center"/>
-                        </StackPanel>
+                        <TextBlock Text="Registrar Nuevo Usuario" FontSize="15" FontWeight="SemiBold" 
+                                   Foreground="#2C2C2C" Margin="0,0,0,16"
+                                   FontFamily="Segoe UI, Arial"/>
 
-                        <TextBlock Text="NOMBRE COMPLETO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtNombreUsuario" Style="{StaticResource ModernTextBox}" Margin="0,0,0,14"/>
+                        <TextBlock Text="NOMBRE COMPLETO" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
+                        <TextBox x:Name="txtNombreUsuario" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
 
-                        <TextBlock Text="NOMBRE DE USUARIO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtUsername" Style="{StaticResource ModernTextBox}" Margin="0,0,0,14"/>
+                        <TextBlock Text="NOMBRE DE USUARIO" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
+                        <TextBox x:Name="txtUsername" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
 
-                        <TextBlock Text="CONTRASEÑA" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtPassword" Style="{StaticResource ModernTextBox}" Margin="0,0,0,14"/>
+                        <TextBlock Text="CONTRASENA" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
+                        <TextBox x:Name="txtPassword" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
 
-                        <TextBlock Text="ROL" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <ComboBox x:Name="cmbRol" Style="{StaticResource ModernComboBox}" Margin="0,0,0,20">
+                        <TextBlock Text="ROL" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
+                        <ComboBox x:Name="cmbRol" Style="{StaticResource ModernComboBox}" Margin="0,0,0,16">
                             <ComboBoxItem Content="Vendedor" IsSelected="True"/>
                         </ComboBox>
 
                         <!-- Info -->
-                        <Border Background="#F8F5F0" CornerRadius="8" Padding="12,10" Margin="0,0,0,18">
+                        <Border Background="#F5F3F0" CornerRadius="6" Padding="12,10" Margin="0,0,0,16"
+                                BorderBrush="#E0DBD4" BorderThickness="1">
                             <StackPanel>
-                                <TextBlock Text="ℹ️ Solo se pueden crear usuarios con rol Vendedor." 
-                                           FontSize="11" Foreground="#8C5A35" TextWrapping="Wrap"/>
+                                <TextBlock Text="Solo se pueden crear usuarios con rol Vendedor." 
+                                           FontSize="11" Foreground="#7A7A7A" TextWrapping="Wrap"
+                                           FontFamily="Segoe UI, Arial"/>
                             </StackPanel>
                         </Border>
 
-                        <Button Content="💾 GUARDAR USUARIO" Style="{StaticResource PrimaryButton}" 
-                                Height="45" Click="BtnGuardarUsuario_Click"/>
+                        <Button Content="GUARDAR USUARIO" Style="{StaticResource PrimaryButton}" 
+                                Height="40" Click="BtnGuardarUsuario_Click"/>
 
-                        <TextBlock x:Name="lblMensaje" Foreground="#27AE60" FontWeight="SemiBold" 
-                                   Margin="0,12,0,0" TextAlignment="Center" TextWrapping="Wrap" FontSize="12"/>
+                        <TextBlock x:Name="lblMensaje" Foreground="#27AE60" FontWeight="Medium" 
+                                   Margin="0,10,0,0" TextAlignment="Center" TextWrapping="Wrap" FontSize="11"
+                                   FontFamily="Segoe UI, Arial"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Acciones sobre usuario seleccionado -->
                 <Border x:Name="panelAccionesUsuario" Style="{StaticResource Card}" Visibility="Collapsed">
                     <StackPanel>
-                        <TextBlock Text="Acciones del Usuario" FontSize="14" FontWeight="Bold" 
-                                   Foreground="#1A1514" Margin="0,0,0,10"/>
-                        <TextBlock x:Name="lblUsuarioSeleccionado" Text="" FontSize="13" 
-                                   Foreground="#8C5A35" Margin="0,0,0,5" TextWrapping="Wrap"/>
-                        <TextBlock x:Name="lblRolSeleccionado" Text="" FontSize="12" 
-                                   Foreground="#6B4226" Margin="0,0,0,15"/>
+                        <TextBlock Text="Acciones del Usuario" FontSize="13" FontWeight="SemiBold" 
+                                   Foreground="#2C2C2C" Margin="0,0,0,8" FontFamily="Segoe UI, Arial"/>
+                        <TextBlock x:Name="lblUsuarioSeleccionado" Text="" FontSize="12" 
+                                   Foreground="#7A7A7A" Margin="0,0,0,4" TextWrapping="Wrap"
+                                   FontFamily="Segoe UI, Arial"/>
+                        <TextBlock x:Name="lblRolSeleccionado" Text="" FontSize="11" 
+                                   Foreground="#2C2C2C" Margin="0,0,0,12"
+                                   FontFamily="Segoe UI, Arial"/>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -74,12 +81,12 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button x:Name="btnToggleActivo" Grid.Column="0" Content="🔒 Desactivar" 
-                                    Style="{StaticResource DangerButton}" Height="40"
+                            <Button x:Name="btnToggleActivo" Grid.Column="0" Content="Desactivar" 
+                                    Style="{StaticResource DangerButton}" Height="36"
                                     Click="BtnToggleActivo_Click"/>
 
-                            <Button Grid.Column="2" Content="🔑 Reset Pass" 
-                                    Style="{StaticResource PrimaryButton}" Height="40"
+                            <Button Grid.Column="2" Content="Reset Pass" 
+                                    Style="{StaticResource PrimaryButton}" Height="36"
                                     Click="BtnResetPassword_Click"/>
                         </Grid>
                     </StackPanel>
@@ -98,14 +105,13 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,12">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="👥" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock Text="Lista de Usuarios" FontSize="16" FontWeight="Bold" 
-                                   Foreground="#1A1514" VerticalAlignment="Center"/>
-                    </StackPanel>
-                    <TextBlock x:Name="lblConteoUsuarios" Text="0 usuarios" FontSize="12" 
-                               Foreground="#8C5A35" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <Grid Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock Text="Lista de Usuarios" FontSize="14" FontWeight="SemiBold" 
+                               Foreground="#2C2C2C" VerticalAlignment="Center"
+                               FontFamily="Segoe UI, Arial"/>
+                    <TextBlock x:Name="lblConteoUsuarios" Text="0 usuarios" FontSize="11" 
+                               Foreground="#A0A0A0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                               FontFamily="Segoe UI, Arial"/>
                 </Grid>
 
                 <DataGrid x:Name="GridUsuarios" Grid.Row="1" 
@@ -122,7 +128,7 @@
                         <DataGridTemplateColumn Header="Estado" Width="90">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border CornerRadius="10" Padding="8,3" HorizontalAlignment="Center">
+                                    <Border CornerRadius="12" Padding="8,3" HorizontalAlignment="Center">
                                         <Border.Style>
                                             <Style TargetType="Border">
                                                 <Setter Property="Background" Value="#E8F5E9"/>
@@ -139,7 +145,8 @@
                                                     <Setter Property="Text" Value="Activo"/>
                                                     <Setter Property="Foreground" Value="#27AE60"/>
                                                     <Setter Property="FontWeight" Value="SemiBold"/>
-                                                    <Setter Property="FontSize" Value="11"/>
+                                                    <Setter Property="FontSize" Value="10"/>
+                                                    <Setter Property="FontFamily" Value="Segoe UI, Arial"/>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Activo}" Value="0">
                                                             <Setter Property="Text" Value="Inactivo"/>

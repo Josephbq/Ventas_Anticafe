@@ -2,18 +2,18 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="COCOCAFE JOGOS — Sistema de Ventas" Height="768" Width="1024" 
-        WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#EFEBE4">
+        WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#F5F3F0">
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- ═════════════════════════════════════════ -->
-        <!-- SIDEBAR                                    -->
+        <!-- SIDEBAR — Dark Compact                    -->
         <!-- ═════════════════════════════════════════ -->
-        <Border Grid.Column="0" Background="#1A1514">
+        <Border Grid.Column="0" Background="#1B1B1B">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -22,115 +22,115 @@
                 </Grid.RowDefinitions>
 
                 <!-- Logo -->
-                <StackPanel Grid.Row="0" Margin="0,30,0,35">
-                    <TextBlock Text="☕" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                    <TextBlock Text="COCOCAFE" FontSize="22" FontWeight="Bold" Foreground="#EFEBE4" 
-                               HorizontalAlignment="Center" FontFamily="Segoe UI"/>
-                    <TextBlock Text="JOGOS" FontSize="12" FontWeight="SemiBold" Foreground="#8C5A35" 
-                               HorizontalAlignment="Center" FontFamily="Segoe UI"/>
-                    <Border Height="1" Background="#3D2B1F" Margin="30,20,30,0"/>
+                <StackPanel Grid.Row="0" Margin="0,28,0,28">
+                    <TextBlock Text="COCOCAFE" FontSize="20" FontWeight="Bold" Foreground="#FFFFFF" 
+                               HorizontalAlignment="Center" FontFamily="Segoe UI, Arial"
+                               Margin="0,0,0,2"/>
+                    <TextBlock Text="JOGOS" FontSize="11" FontWeight="SemiBold" Foreground="#C9A96E" 
+                               HorizontalAlignment="Center" FontFamily="Segoe UI, Arial"/>
+                    <Border Height="1" Background="#333333" Margin="24,20,24,0"/>
                 </StackPanel>
 
-                <!-- Menú -->
-                <StackPanel Grid.Row="1" Margin="8,0">
+                <!-- Menu -->
+                <StackPanel Grid.Row="1" Margin="4,0">
                     <Button x:Name="btnDashboard" Style="{StaticResource SidebarButtonActive}" 
                             Click="btnDashboard_Click">
-                        <Grid Width="220">
-                            <TextBlock Text="🏠  Dashboard" VerticalAlignment="Center"/>
+                        <Grid Width="180">
+                            <TextBlock Text="Dashboard" VerticalAlignment="Center" 
+                                       FontFamily="Segoe UI, Arial"/>
                             <Border x:Name="badgeAlerta" Background="#C0392B" CornerRadius="10"
-                                    Width="22" Height="22" HorizontalAlignment="Right" 
-                                    VerticalAlignment="Center" Margin="0,0,5,0" Visibility="Collapsed">
-                                <TextBlock x:Name="lblBadgeCount" Text="0" Foreground="White"
+                                    Width="20" Height="20" HorizontalAlignment="Right" 
+                                    VerticalAlignment="Center" Margin="0,0,4,0" Visibility="Collapsed">
+                                <TextBlock x:Name="lblBadgeCount" Text="0" Foreground="#FFFFFF"
                                            FontSize="10" FontWeight="Bold"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           FontFamily="Segoe UI, Arial"/>
                             </Border>
                         </Grid>
                     </Button>
 
                     <Button x:Name="btnPOS" Style="{StaticResource SidebarButton}" 
-                            Content="🎲  Punto de Venta" Click="btnPOS_Click"/>
+                            Content="Punto de Venta" Click="btnPOS_Click"/>
 
                     <Button x:Name="btnInventario" Style="{StaticResource SidebarButton}" 
-                            Content="📦  Inventario" Click="btnInventario_Click"/>
+                            Content="Inventario" Click="btnInventario_Click"/>
 
                     <Button x:Name="btnReportes" Style="{StaticResource SidebarButton}" 
-                            Content="📊  Reportes" Click="btnReportes_Click"/>
+                            Content="Reportes" Click="btnReportes_Click"/>
 
                     <Button x:Name="btnUsuarios" Style="{StaticResource SidebarButton}" 
-                            Content="👥  Gestión de Usuarios" Click="btnUsuarios_Click"
+                            Content="Gestion de Usuarios" Click="btnUsuarios_Click"
                             Visibility="Collapsed"/>
                 </StackPanel>
 
-                <!-- Footer: Usuario + Logout -->
-                <StackPanel Grid.Row="2" Margin="20,0,20,20">
-                    <Border Height="1" Background="#3D2B1F" Margin="0,0,0,15"/>
+                <!-- Footer -->
+                <StackPanel Grid.Row="2" Margin="16,0,16,16">
+                    <Border Height="1" Background="#333333" Margin="0,0,0,14"/>
                     
-                    <!-- Info del usuario logueado -->
-                    <StackPanel Margin="0,0,0,12">
-                        <TextBlock x:Name="lblNombreUsuario" Text="Usuario" FontSize="13" 
-                                   FontWeight="SemiBold" Foreground="#EFEBE4" 
-                                   HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                        <Border Background="#3D2B1F" CornerRadius="10" Padding="10,3" 
-                                HorizontalAlignment="Center" Margin="0,5,0,0">
-                            <TextBlock x:Name="lblRolUsuario" Text="Rol" FontSize="10" 
-                                       FontWeight="Bold" Foreground="#8C5A35" 
-                                       HorizontalAlignment="Center"/>
-                        </Border>
-                    </StackPanel>
+                    <TextBlock x:Name="lblNombreUsuario" Text="Usuario" FontSize="12" 
+                               FontWeight="SemiBold" Foreground="#EEEEEE" 
+                               HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"
+                               FontFamily="Segoe UI, Arial"/>
                     
-                    <!-- Fecha -->
-                    <TextBlock x:Name="lblFecha" Text="" FontSize="11" Foreground="#8C5A35" 
-                               HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="lblFecha" Text="" FontSize="10" Foreground="#777777" 
+                               HorizontalAlignment="Center" Margin="0,4,0,10"
+                               FontFamily="Segoe UI, Arial"/>
                     
-                    <!-- Botón Cerrar Sesión -->
-                    <Button x:Name="btnLogout" Content="🚪  Cerrar Sesión" Height="40" 
+                    <!-- Cerrar Sesion -->
+                    <Button x:Name="btnLogout" Content="Cerrar Sesion" Height="36" 
                             Cursor="Hand" Click="BtnLogout_Click"
-                            Background="#3D2B1F" Foreground="#D9CBB8" FontSize="13" 
-                            FontWeight="SemiBold" BorderThickness="0">
+                            Background="#2E2E2E" Foreground="#BBBBBB" FontSize="12" 
+                            FontWeight="Medium" BorderThickness="0"
+                            FontFamily="Segoe UI, Arial">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="bd" Background="{TemplateBinding Background}" 
-                                        CornerRadius="8" Padding="10,8">
+                                        CornerRadius="6" Padding="10,7"
+                                        BorderBrush="#444444" BorderThickness="1">
                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter TargetName="bd" Property="Background" Value="#C0392B"/>
-                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter TargetName="bd" Property="BorderBrush" Value="#C0392B"/>
+                                        <Setter Property="Foreground" Value="#FFFFFF"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
                     
-                    <TextBlock Text="v1.1" FontSize="10" Foreground="#4A3525" 
-                               HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                    <TextBlock Text="v2.0" FontSize="9" Foreground="#555555" 
+                               HorizontalAlignment="Center" Margin="0,8,0,0"
+                               FontFamily="Segoe UI, Arial"/>
                 </StackPanel>
             </Grid>
         </Border>
 
         <!-- ═════════════════════════════════════════ -->
-        <!-- ÁREA PRINCIPAL                             -->
+        <!-- MAIN CONTENT AREA                         -->
         <!-- ═════════════════════════════════════════ -->
-        <Border Grid.Column="1" Background="#EFEBE4" Margin="0">
+        <Border Grid.Column="1" Background="#F5F3F0">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="65"/>
+                    <RowDefinition Height="56"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header -->
-                <Border Grid.Row="0" Background="#F8F5F0" BorderBrush="#E8E0D5" BorderThickness="0,0,0,1">
-                    <Grid Margin="25,0">
-                        <TextBlock x:Name="lblTituloSeccion" Text="Dashboard" FontSize="22" 
-                                   FontWeight="Bold" Foreground="#1A1514" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="lblHora" Text="" FontSize="13" Foreground="#8C5A35"
-                                   VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <!-- Top Bar -->
+                <Border Grid.Row="0" Background="#FFFFFF" BorderBrush="#E0DBD4" BorderThickness="0,0,0,1">
+                    <Grid Margin="24,0">
+                        <TextBlock x:Name="lblTituloSeccion" Text="Dashboard" FontSize="18" 
+                                   FontWeight="SemiBold" Foreground="#2C2C2C" VerticalAlignment="Center"
+                                   FontFamily="Segoe UI, Arial"/>
+                        <TextBlock x:Name="lblHora" Text="" FontSize="12" Foreground="#A0A0A0"
+                                   VerticalAlignment="Center" HorizontalAlignment="Right"
+                                   FontFamily="Segoe UI, Arial"/>
                     </Grid>
                 </Border>
 
-                <!-- Contenido -->
-                <ContentControl x:Name="AreaPrincipal" Grid.Row="1" Margin="20,15,20,20"/>
+                <!-- Content -->
+                <ContentControl x:Name="AreaPrincipal" Grid.Row="1" Margin="24,18,24,24"/>
             </Grid>
         </Border>
     </Grid>

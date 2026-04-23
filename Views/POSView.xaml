@@ -8,23 +8,23 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="380"/>
+            <ColumnDefinition Width="360"/>
         </Grid.ColumnDefinitions>
 
         <!-- ═══════════════════════════════════════ -->
         <!-- PANEL IZQUIERDO: MESAS + PRODUCTOS      -->
         <!-- ═══════════════════════════════════════ -->
-        <Grid Grid.Column="0" Margin="0,0,15,0">
+        <Grid Grid.Column="0" Margin="0,0,12,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!-- Mesas -->
-            <Border Grid.Row="0" Style="{StaticResource Card}" Margin="0,0,0,15">
+            <Border Grid.Row="0" Style="{StaticResource Card}" Margin="0,0,0,12">
                 <StackPanel>
-                    <TextBlock Text="🪑 Selecciona una Mesa" FontSize="16" FontWeight="Bold" 
-                               Foreground="#1A1514" Margin="0,0,0,12"/>
+                    <TextBlock Text="Selecciona una Mesa" FontSize="14" FontWeight="SemiBold" 
+                               Foreground="#2C2C2C" Margin="0,0,0,10" FontFamily="Segoe UI, Arial"/>
                     <WrapPanel x:Name="PanelMesas" Orientation="Horizontal"/>
                 </StackPanel>
             </Border>
@@ -38,16 +38,16 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="📋 Menú de Productos" FontSize="16" FontWeight="Bold" 
-                               Foreground="#1A1514" Margin="0,0,0,12"/>
+                    <TextBlock Grid.Row="0" Text="Menu de Productos" FontSize="14" FontWeight="SemiBold" 
+                               Foreground="#2C2C2C" Margin="0,0,0,10" FontFamily="Segoe UI, Arial"/>
 
-                    <!-- Tabs de categoría -->
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+                    <!-- Tabs de categoria -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
                         <Button x:Name="btnTabTodos" Content="Todos" Style="{StaticResource ToggleBtnActive}" 
                                 Click="BtnTab_Click" Tag="TODOS"/>
-                        <Button x:Name="btnTabCafe" Content="☕ Cafetería" Style="{StaticResource ToggleBtn}" 
+                        <Button x:Name="btnTabCafe" Content="Cafeteria" Style="{StaticResource ToggleBtn}" 
                                 Click="BtnTab_Click" Tag="CAFETERIA"/>
-                        <Button x:Name="btnTabJuegos" Content="🎲 Juegos" Style="{StaticResource ToggleBtn}" 
+                        <Button x:Name="btnTabJuegos" Content="Juegos" Style="{StaticResource ToggleBtn}" 
                                 Click="BtnTab_Click" Tag="JUEGOS"/>
                     </StackPanel>
 
@@ -72,50 +72,58 @@
                 </Grid.RowDefinitions>
 
                 <!-- Mesa seleccionada -->
-                <Border Grid.Row="0" Background="#2D201A" CornerRadius="8" Padding="12,10" Margin="0,0,0,10">
-                    <TextBlock x:Name="lblMesaSeleccionada" Text="Selecciona una mesa" FontSize="15" 
-                               FontWeight="Bold" Foreground="#EFEBE4"/>
+                <Border Grid.Row="0" Background="#6B4F3A" CornerRadius="6" Padding="12,8" Margin="0,0,0,10">
+                    <TextBlock x:Name="lblMesaSeleccionada" Text="Selecciona una mesa" FontSize="13" 
+                               FontWeight="SemiBold" Foreground="#FFFFFF" FontFamily="Segoe UI, Arial"/>
                 </Border>
 
                 <!-- Encabezado ticket -->
-                <Grid Grid.Row="1" Margin="5,5,5,8">
+                <Grid Grid.Row="1" Margin="4,4,4,6">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="35"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="70"/>
                         <ColumnDefinition Width="80"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Qty" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold"/>
-                    <TextBlock Grid.Column="1" Text="Producto" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold"/>
-                    <TextBlock Grid.Column="2" Text="Precio" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold"/>
-                    <TextBlock Grid.Column="3" Text="Subtotal" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" TextAlignment="Right"/>
+                    <TextBlock Grid.Column="0" Text="Qty" FontSize="10" Foreground="#A0A0A0" FontWeight="SemiBold"
+                               FontFamily="Segoe UI, Arial"/>
+                    <TextBlock Grid.Column="1" Text="Producto" FontSize="10" Foreground="#A0A0A0" FontWeight="SemiBold"
+                               FontFamily="Segoe UI, Arial"/>
+                    <TextBlock Grid.Column="2" Text="Precio" FontSize="10" Foreground="#A0A0A0" FontWeight="SemiBold"
+                               FontFamily="Segoe UI, Arial"/>
+                    <TextBlock Grid.Column="3" Text="Subtotal" FontSize="10" Foreground="#A0A0A0" FontWeight="SemiBold" 
+                               TextAlignment="Right" FontFamily="Segoe UI, Arial"/>
                 </Grid>
 
                 <!-- Lista del ticket -->
-                <Border Grid.Row="2" BorderBrush="#E8E0D5" BorderThickness="0,1,0,1">
+                <Border Grid.Row="2" BorderBrush="#E0DBD4" BorderThickness="0,1,0,1">
                     <ListBox x:Name="ListaTicket" Background="Transparent" BorderThickness="0"
-                             Foreground="#1A1514" FontSize="13" 
+                             Foreground="#2C2C2C" FontSize="12" 
                              HorizontalContentAlignment="Stretch"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             FontFamily="Segoe UI, Arial"/>
                 </Border>
 
-                <!-- Botón quitar -->
-                <Button Grid.Row="3" Content="🗑️ Quitar Seleccionado" Height="38"
-                        Style="{StaticResource DangerButton}" Margin="0,10,0,0"
+                <!-- Boton quitar -->
+                <Button Grid.Row="3" Content="Quitar Seleccionado" Height="34"
+                        Style="{StaticResource DangerButton}" Margin="0,8,0,0"
                         Click="BtnQuitarProducto_Click"/>
 
                 <!-- Total + Cobrar -->
-                <StackPanel Grid.Row="4" Margin="0,12,0,0">
-                    <Border Background="#F8F5F0" CornerRadius="8" Padding="15,10" Margin="0,0,0,10">
+                <StackPanel Grid.Row="4" Margin="0,10,0,0">
+                    <Border Background="#F5F3F0" CornerRadius="6" Padding="14,10" Margin="0,0,0,10"
+                            BorderBrush="#E0DBD4" BorderThickness="1">
                         <Grid>
-                            <TextBlock Text="TOTAL" FontSize="14" Foreground="#8C5A35" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="lblTotal" Text="0.00 Bs" FontSize="24" FontWeight="Bold" 
-                                       Foreground="#1A1514" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            <TextBlock Text="TOTAL" FontSize="12" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                       VerticalAlignment="Center" FontFamily="Segoe UI, Arial"/>
+                            <TextBlock x:Name="lblTotal" Text="0.00 Bs" FontSize="20" FontWeight="Bold" 
+                                       Foreground="#6B4F3A" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                       FontFamily="Segoe UI, Arial"/>
                         </Grid>
                     </Border>
 
-                    <Button Content="💵  COBRAR Y CERRAR MESA" Height="50"
-                            Style="{StaticResource DarkButton}" FontSize="15"
+                    <Button Content="COBRAR Y CERRAR MESA" Height="44"
+                            Style="{StaticResource DarkButton}" FontSize="14"
                             Click="BtnCobrar_Click"/>
                 </StackPanel>
             </Grid>

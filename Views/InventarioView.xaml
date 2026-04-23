@@ -8,136 +8,153 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="340"/>
+            <ColumnDefinition Width="320"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- ═══════════════════════════════════════ -->
         <!-- PANEL IZQUIERDO: FORMULARIOS             -->
         <!-- ═══════════════════════════════════════ -->
-        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,15,0">
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,12,0">
             <StackPanel x:Name="panelFormularios">
 
                 <!-- Toggle: Nuevo Producto / Nuevo Lote -->
-                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <Border Style="{StaticResource InventoryItemCard}" Margin="0,0,0,10">
                     <StackPanel>
-                        <TextBlock Text="Acción" FontSize="12" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                        <TextBlock Text="Accion" FontSize="11" Foreground="#7A7A7A" FontWeight="Medium" 
+                                   Margin="0,0,0,8" FontFamily="Segoe UI, Arial"/>
                         <StackPanel Orientation="Horizontal">
-                            <Button x:Name="btnModoProducto" Content="📦 Nuevo Producto" 
+                            <Button x:Name="btnModoProducto" Content="Nuevo Producto" 
                                     Style="{StaticResource ToggleBtnActive}" Click="BtnModoProducto_Click"/>
-                            <Button x:Name="btnModoLote" Content="📋 Nuevo Lote" 
+                            <Button x:Name="btnModoLote" Content="Nuevo Lote" 
                                     Style="{StaticResource ToggleBtn}" Click="BtnModoLote_Click"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <!-- Formulario NUEVO PRODUCTO -->
-                <Border x:Name="panelNuevoProducto" Style="{StaticResource Card}" Margin="0,0,0,12">
+                <Border x:Name="panelNuevoProducto" Style="{StaticResource Card}" Margin="0,0,0,10">
                     <StackPanel>
-                        <TextBlock Text="Registrar Producto" FontSize="18" FontWeight="Bold" 
-                                   Foreground="#1A1514" Margin="0,0,0,18"/>
+                        <TextBlock Text="Registrar Producto" FontSize="15" FontWeight="SemiBold" 
+                                   Foreground="#2C2C2C" Margin="0,0,0,16" FontFamily="Segoe UI, Arial"/>
 
-                        <TextBlock Text="NOMBRE" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtNombre" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
+                        <TextBlock Text="NOMBRE" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
+                        <TextBox x:Name="txtNombre" Margin="0,0,0,12" Style="{StaticResource ModernTextBox}"/>
 
-                        <TextBlock Text="CATEGORÍA" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBlock Text="CATEGORIA" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
                         <ComboBox x:Name="cmbTipo" Style="{StaticResource ModernComboBox}" Margin="0,0,0,12"
                                   SelectionChanged="CmbTipo_SelectionChanged">
                             <ComboBoxItem Content="CAFETERIA" IsSelected="True"/>
                             <ComboBoxItem Content="JUEGOS"/>
                         </ComboBox>
 
-                        <TextBlock Text="PRECIO DE VENTA (Bs)" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBlock Text="PRECIO DE VENTA (Bs)" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
                         <TextBox x:Name="txtPrecio" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
 
-                        <!-- Campos condicionales para Cafetería -->
+                        <!-- Campos condicionales para Cafeteria -->
                         <StackPanel x:Name="panelCamposCafe">
-                            <TextBlock Text="COSTO DE COMPRA (Bs)" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <TextBlock Text="COSTO DE COMPRA (Bs)" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                       Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
                             <TextBox x:Name="txtCosto" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
 
                             <Grid Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="8"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="STOCK INICIAL" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <TextBlock Text="STOCK INICIAL" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                               Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
                                     <TextBox x:Name="txtStock" Style="{StaticResource ModernTextBox}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="2">
-                                    <TextBlock Text="STOCK MÍNIMO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <TextBlock Text="STOCK MINIMO" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                               Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
                                     <TextBox x:Name="txtStockMin" Style="{StaticResource ModernTextBox}"/>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
 
                         <!-- Estado del producto -->
-                        <TextBlock Text="ESTADO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <ComboBox x:Name="cmbEstado" Style="{StaticResource ModernComboBox}" Margin="0,0,0,18">
+                        <TextBlock Text="ESTADO" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
+                        <ComboBox x:Name="cmbEstado" Style="{StaticResource ModernComboBox}" Margin="0,0,0,16">
                             <ComboBoxItem Content="Disponible" IsSelected="True"/>
                             <ComboBoxItem Content="Agotado"/>
-                            <ComboBoxItem Content="Dañado"/>
+                            <ComboBoxItem Content="Danado"/>
                             <ComboBoxItem Content="Suspendido"/>
                         </ComboBox>
 
-                        <Button Content="💾 GUARDAR PRODUCTO" Style="{StaticResource PrimaryButton}" 
-                                Height="45" Click="BtnGuardar_Click"/>
+                        <Button Content="GUARDAR PRODUCTO" Style="{StaticResource PrimaryButton}" 
+                                Height="40" Click="BtnGuardar_Click"/>
 
-                        <TextBlock x:Name="lblMensaje" Foreground="#27AE60" FontWeight="SemiBold" 
-                                   Margin="0,12,0,0" TextAlignment="Center" TextWrapping="Wrap" FontSize="12"/>
+                        <TextBlock x:Name="lblMensaje" Foreground="#27AE60" FontWeight="Medium" 
+                                   Margin="0,10,0,0" TextAlignment="Center" TextWrapping="Wrap" FontSize="11"
+                                   FontFamily="Segoe UI, Arial"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Formulario NUEVO LOTE -->
-                <Border x:Name="panelNuevoLote" Style="{StaticResource Card}" Visibility="Collapsed" Margin="0,0,0,12">
+                <Border x:Name="panelNuevoLote" Style="{StaticResource Card}" Visibility="Collapsed" Margin="0,0,0,10">
                     <StackPanel>
-                        <TextBlock Text="Registrar Nuevo Lote" FontSize="18" FontWeight="Bold" 
-                                   Foreground="#1A1514" Margin="0,0,0,18"/>
+                        <TextBlock Text="Registrar Nuevo Lote" FontSize="15" FontWeight="SemiBold" 
+                                   Foreground="#2C2C2C" Margin="0,0,0,16" FontFamily="Segoe UI, Arial"/>
 
-                        <TextBlock Text="PRODUCTO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBlock Text="PRODUCTO" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
                         <ComboBox x:Name="cmbProductoLote" Style="{StaticResource ModernComboBox}" 
                                   DisplayMemberPath="Nombre" Margin="0,0,0,12"/>
 
-                        <TextBlock Text="COSTO UNITARIO (Bs)" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBlock Text="COSTO UNITARIO (Bs)" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
                         <TextBox x:Name="txtCostoLote" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
 
-                        <TextBlock Text="PRECIO VENTA NUEVO (Bs)" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBlock Text="PRECIO VENTA NUEVO (Bs)" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
                         <TextBox x:Name="txtPrecioVentaLote" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
 
-                        <TextBlock Text="CANTIDAD" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBlock Text="CANTIDAD" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
                         <TextBox x:Name="txtCantidadLote" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
 
-                        <TextBlock Text="NOTAS (opcional)" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtNotasLote" Style="{StaticResource ModernTextBox}" Height="60" 
-                                 TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,18"/>
+                        <TextBlock Text="NOTAS (opcional)" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
+                        <TextBox x:Name="txtNotasLote" Style="{StaticResource ModernTextBox}" Height="56" 
+                                 TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,16"/>
 
-                        <Button Content="📋 REGISTRAR LOTE" Style="{StaticResource SuccessButton}" 
-                                Height="45" Click="BtnGuardarLote_Click"/>
+                        <Button Content="REGISTRAR LOTE" Style="{StaticResource SuccessButton}" 
+                                Height="40" Click="BtnGuardarLote_Click"/>
 
-                        <TextBlock x:Name="lblMensajeLote" Foreground="#27AE60" FontWeight="SemiBold" 
-                                   Margin="0,12,0,0" TextAlignment="Center" TextWrapping="Wrap" FontSize="12"/>
+                        <TextBlock x:Name="lblMensajeLote" Foreground="#27AE60" FontWeight="Medium" 
+                                   Margin="0,10,0,0" TextAlignment="Center" TextWrapping="Wrap" FontSize="11"
+                                   FontFamily="Segoe UI, Arial"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Acciones sobre producto seleccionado -->
                 <Border x:Name="panelAcciones" Style="{StaticResource Card}" Visibility="Collapsed">
                     <StackPanel>
-                        <TextBlock Text="Acciones del Producto" FontSize="14" FontWeight="Bold" 
-                                   Foreground="#1A1514" Margin="0,0,0,10"/>
-                        <TextBlock x:Name="lblProductoSel" Text="" FontSize="13" Foreground="#8C5A35" Margin="0,0,0,10"/>
+                        <TextBlock Text="Acciones del Producto" FontSize="13" FontWeight="SemiBold" 
+                                   Foreground="#2C2C2C" Margin="0,0,0,8" FontFamily="Segoe UI, Arial"/>
+                        <TextBlock x:Name="lblProductoSel" Text="" FontSize="12" Foreground="#7A7A7A" 
+                                   Margin="0,0,0,10" FontFamily="Segoe UI, Arial"/>
 
-                        <TextBlock Text="CAMBIAR ESTADO" FontSize="11" Foreground="#8C5A35" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBlock Text="CAMBIAR ESTADO" FontSize="10" Foreground="#7A7A7A" FontWeight="SemiBold" 
+                                   Margin="0,0,0,4" FontFamily="Segoe UI, Arial"/>
                         <ComboBox x:Name="cmbCambiarEstado" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10">
                             <ComboBoxItem Content="Disponible"/>
                             <ComboBoxItem Content="Agotado"/>
-                            <ComboBoxItem Content="Dañado"/>
+                            <ComboBoxItem Content="Danado"/>
                             <ComboBoxItem Content="Suspendido"/>
                         </ComboBox>
-                        <Button Content="✏️ Actualizar Estado" Style="{StaticResource PrimaryButton}" 
-                                Height="38" Click="BtnActualizarEstado_Click"/>
+                        <Button Content="Actualizar Estado" Style="{StaticResource PrimaryButton}" 
+                                Height="36" Click="BtnActualizarEstado_Click"/>
                     </StackPanel>
                 </Border>
 
@@ -150,22 +167,20 @@
         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
             <StackPanel>
 
-                <!-- ═══ TABLA CAFETERÍA ═══ -->
-                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <!-- ═══ TABLA CAFETERIA ═══ -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,10">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0" Margin="0,0,0,12">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="☕" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <TextBlock Text="Productos de Cafetería" FontSize="16" FontWeight="Bold" 
-                                           Foreground="#1A1514" VerticalAlignment="Center"/>
-                            </StackPanel>
-                            <TextBlock x:Name="lblConteoCafe" Text="0 productos" FontSize="12" 
-                                       Foreground="#8C5A35" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <Grid Grid.Row="0" Margin="0,0,0,10">
+                            <TextBlock Text="Productos de Cafeteria" FontSize="14" FontWeight="SemiBold" 
+                                       Foreground="#2C2C2C" VerticalAlignment="Center" FontFamily="Segoe UI, Arial"/>
+                            <TextBlock x:Name="lblConteoCafe" Text="0 productos" FontSize="11" 
+                                       Foreground="#A0A0A0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                       FontFamily="Segoe UI, Arial"/>
                         </Grid>
 
                         <DataGrid x:Name="GridCafeteria" Grid.Row="1" 
@@ -180,29 +195,27 @@
                                 <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
                                 <DataGridTextColumn Header="Precio (Bs)" Binding="{Binding PrecioVentaBase, StringFormat=F2}" Width="85"/>
                                 <DataGridTextColumn Header="Stock" Binding="{Binding StockActual}" Width="60"/>
-                                <DataGridTextColumn Header="Mín" Binding="{Binding StockMinimo}" Width="45"/>
-                                <DataGridTextColumn Header="Estado" Binding="{Binding EstadoProducto}" Width="95"/>
+                                <DataGridTextColumn Header="Min" Binding="{Binding StockMinimo}" Width="45"/>
+                                <DataGridTextColumn Header="Estado" Binding="{Binding EstadoProducto}" Width="90"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
                 </Border>
 
                 <!-- ═══ TABLA JUEGOS ═══ -->
-                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <Border Style="{StaticResource Card}" Margin="0,0,0,10">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0" Margin="0,0,0,12">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🎲" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <TextBlock Text="Juegos de Mesa" FontSize="16" FontWeight="Bold" 
-                                           Foreground="#1A1514" VerticalAlignment="Center"/>
-                            </StackPanel>
-                            <TextBlock x:Name="lblConteoJuegos" Text="0 juegos" FontSize="12" 
-                                       Foreground="#8C5A35" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <Grid Grid.Row="0" Margin="0,0,0,10">
+                            <TextBlock Text="Juegos de Mesa" FontSize="14" FontWeight="SemiBold" 
+                                       Foreground="#2C2C2C" VerticalAlignment="Center" FontFamily="Segoe UI, Arial"/>
+                            <TextBlock x:Name="lblConteoJuegos" Text="0 juegos" FontSize="11" 
+                                       Foreground="#A0A0A0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                       FontFamily="Segoe UI, Arial"/>
                         </Grid>
 
                         <DataGrid x:Name="GridJuegos" Grid.Row="1" 
@@ -217,7 +230,7 @@
                                 <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*"/>
                                 <DataGridTextColumn Header="Precio/Hora (Bs)" Binding="{Binding PrecioVentaBase, StringFormat=F2}" Width="110"/>
                                 <DataGridTextColumn Header="Copias" Binding="{Binding StockActual}" Width="65"/>
-                                <DataGridTextColumn Header="Estado" Binding="{Binding EstadoProducto}" Width="95"/>
+                                <DataGridTextColumn Header="Estado" Binding="{Binding EstadoProducto}" Width="90"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -231,8 +244,9 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock x:Name="lblTituloLotes" Grid.Row="0" Text="📋 Historial de Lotes" FontSize="14" 
-                                   FontWeight="Bold" Foreground="#1A1514" Margin="0,0,0,10"/>
+                        <TextBlock x:Name="lblTituloLotes" Grid.Row="0" Text="Historial de Lotes" FontSize="13" 
+                                   FontWeight="SemiBold" Foreground="#2C2C2C" Margin="0,0,0,8"
+                                   FontFamily="Segoe UI, Arial"/>
 
                         <DataGrid x:Name="GridLotes" Grid.Row="1"
                                   Style="{StaticResource ModernDataGrid}"

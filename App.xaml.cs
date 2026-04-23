@@ -1,4 +1,4 @@
-﻿using System.Configuration;
+using System.Configuration;
 using System.Data;
 using System.Windows;
 using WpfApp1.Data; // Para poder acceder a tu ConexionDB
@@ -15,6 +15,12 @@ namespace WpfApp1
             base.OnStartup(e);
             // Crea el archivo .db y las tablas si no existen
             WpfApp1.Data.ConexionDB.InicializarBaseDeDatos();
+
+            // Si se pasa el argumento --seed, generar datos de prueba
+            if (e.Args.Length > 0 && e.Args[0].Equals("--seed", StringComparison.OrdinalIgnoreCase))
+            {
+                SeedTestData.Ejecutar();
+            }
         }
     }
 

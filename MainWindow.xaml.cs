@@ -35,7 +35,6 @@ namespace WpfApp1
         private void ConfigurarSesion()
         {
             lblNombreUsuario.Text = SesionActual.NombreUsuario;
-            lblRolUsuario.Text = SesionActual.Rol.ToUpper();
         }
 
         private void ConfigurarPermisos()
